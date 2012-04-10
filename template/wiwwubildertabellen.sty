@@ -1,0 +1,769 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{wiwwubildertabellen}[2011/03/24 Bild und Tabellen-Befehle fuer alle Stile (von Stephan Dlugosz) Vers. 0.5.7]
+
+\RequirePackage{kvoptions}[2006/08/22]
+\RequirePackage{ifthen} % fuer die Ablaufsteuerung mit if-then-else Schleifen
+\RequirePackage{scrlfile} % fuer Pruefung auf geladene Klassen und Pakete
+\RequirePackage{graphicx} % Basis fuer Grafikeinbindung
+\RequirePackage{array} %ein paar Fehlerkorrekturen
+\RequirePackage{rotating} % fuer gedrehte Textteile
+\RequirePackage{xkeyval} % fuer key=value Schnittstelle
+\RequirePackage{colortbl} % fuer Farben in Tabellen
+\RequirePackage{dcolumn} %fuer Ausrichtung in Tabellen nach dem Komma
+\RequirePackage[UKenglish,ngerman]{babel}
+\RequirePackage{slashbox} % fuer ``gestrichene'' Tabellenzellen
+\RequirePackage{caption}[2007/10/25] % fuer Bildunterschriften
+
+\SetupKeyvalOptions{%
+	family=wiwwubildertabellen,
+	prefix=wiwwubildertabellen@
+}
+
+\newcommand{\wiwwubildertabellen@RequiredPackages}{}
+\newcommand{\wiwwubildertabellen@RequiredPackagesNonBeamer}{}
+\newboolean{wiwwubildertabellen@bilderbeamer} % boolean, um zu kennzeichnen, ob die genutzte Klasse von Beamer abstammt
+\setboolean{wiwwubildertabellen@bilderbeamer}{false}
+
+%% Optionen deklarieren
+\DeclareBoolOption[false]{tabularx} % stellt tabularx Umgebung zur Verfuegung, toetet aber moeglicherweise Links auf Fussnoten!
+%\DeclareStringOption[german]{language}[german] % Sprachwahl, Vorgabe ist deutsch (neue Rechtschreibung)
+\DeclareBoolOption[false]{TpX} % stellt Befehl fuer TpX-Grafiken bereit
+\DeclareVoidOption{wrap}{% laedt das Paket wrapfigure, um textumflossene Grafiken zu ermoeglichen
+   \g@addto@macro\wiwwubildertabellen@RequiredPackagesNonBeamer{%
+		\RequirePackage{wrapfig}
+	}
+}
+\DeclareVoidOption{subfloat}{% laedt subfig, um mehrere Grafiken in einer Fliessumgebung zu ermoeglichen
+	\g@addto@macro\wiwwubildertabellen@RequiredPackagesNonBeamer{%
+		\RequirePackage{subfig}
+	}
+}
+\DeclareVoidOption{mixedfloat}{% laedt subfig, um mehrere Grafiken in einer Fliessumgebung zu ermoeglichen
+	\g@addto@macro\wiwwubildertabellen@RequiredPackagesNonBeamer{%
+		\RequirePackage[margins=raggedright,objectset=justified]{floatrow}
+	}
+}
+\DeclareBoolOption[true]{shortnames} % sollen die Namen der caption abgekuerzt werden?
+\DeclareDefaultOption{%
+	\PackageWarning{wiwwubildertabellen}{Option unknown: \CurrentOption}
+}
+\ProcessKeyvalOptions{wiwwubildertabellen}
+
+%%%% ausfuehren der optionen Teil 1/2
+\ifthenelse{\boolean{wiwwubildertabellen@tabularx}}{% laden von tabularx (falls notwendig)
+	\g@addto@macro\wiwwubildertabellen@RequiredPackagesNonBeamer{%
+		\RequirePackage{tabularx}[1999/01/07]
+		% fuer Tabellen mit fester Breite
+	}
+}{}
+\ifthenelse{\boolean{wiwwubildertabellen@TpX}}{% laden von Paketen fuer TpX
+	\g@addto@macro\wiwwubildertabellen@RequiredPackages{%
+		\RequirePackage{ifpdf} % fuer PDF-Pruefung
+		\RequirePackage{import} % fuer einfaches Importieren (mit Pfaderhaltung)
+		\newcommand{\wiwwubildertabellen@grafikimport}{}
+		\define@key{grafikint}{import}{% weiteres key=value Paar definieren, um den Pfad angeben zu koennen
+			\renewcommand{\wiwwubildertabellen@grafikimport}{#1}
+		}
+	}
+}{}
+\ifthenelse{\boolean{wiwwubildertabellen@shortnames}}{%
+	\addto\captionsngerman{%
+	  \renewcommand{\figurename}{Abb.}%
+	  \renewcommand{\tablename}{Tab.}%
+	}
+	\addto\captionsUKenglish{%
+	  \renewcommand{\figurename}{Fig.}%
+	  \renewcommand{\tablename}{Tab.}%
+	}
+	\addto\captionsenglish{%
+	  \renewcommand{\figurename}{Fig.}%
+	  \renewcommand{\tablename}{Tab.}%
+	}
+	\addto\captionsUSenglish{%
+	  \renewcommand{\figurename}{Fig.}%
+	  \renewcommand{\tablename}{Tab.}%
+	}
+}{}
+%%%%
+
+\addto\captionsUKenglish{%
+  \renewcommand{\wiwwubildertabellen@Quelle}{Source}%
+}
+\addto\captionsenglish{%
+  \renewcommand{\wiwwubildertabellen@Quelle}{Source}%
+}
+\addto\captionsUSenglish{%
+  \renewcommand{\wiwwubildertabellen@Quelle}{Source}%
+}
+
+\AfterClass*{beamer}{% wenn Beamer (oder eine davon abgeleitete Klasse) verwendet wird
+   \setboolean{wiwwubildertabellen@bilderbeamer}{true}
+   \renewcommand{\wiwwubildertabellen@RequiredPackagesNonBeamer}{}
+   \PackageInfo{wiwwubildertabellen}{Class beamer is used! Corrections made\ldots}
+}
+
+\ifthenelse{\boolean{wiwwubildertabellen@bilderbeamer}}{}{% Pakete, die nur OHNE beamer geladen werden
+   \RequirePackage{afterpage} % zum setzen von Fliessumgebungen am Ende der Seite
+   \RequirePackage{longtable} % fuer ueberlange Tabellen
+   \RequirePackage{footnote} % fuer Fussnoten in Tabellen
+   \RequirePackage{lscape} % fuer gedrehte Langtabellen
+} 
+\wiwwubildertabellen@RequiredPackages
+\wiwwubildertabellen@RequiredPackagesNonBeamer
+
+\AfterPackage*{longtable}{% Korektur des caption fuer longtables
+	%\PackageWarning{wiwwubildertabellen}{LT@array redefiniert}
+	% Anmerkung: mega ekeliger code, nur um eine kleinigkeit zu korrigieren!!!!
+	\def\LT@array[#1]#2{%
+  %\stepcounter{LT@tables} 
+  %\refstepcounter{table}
+  %\ifthenelse{\boolean{wiwwubildertabellen@anhang}}{}{\addcontentsline{lot}{table}{\protect\numberline{\thetable}\wiwwubildertabellen@tabellecaptiontoc}}% das auch!!! das nicht!!!!!
+  %\wiwwubildertabellen@tabellelabel% das ist zusaetzlich zu tun!! (koennte aber woanders stehen\ldots)
+  \if l#1%
+    \LTleft\z@ \LTright\fill
+  \else\if r#1%
+    \LTleft\fill \LTright\z@
+  \else\if c#1%
+    \LTleft\fill \LTright\fill
+  \fi\fi\fi
+  \let\LT@mcol\multicolumn
+  \let\LT@@tabarray\@tabarray
+  \let\LT@@hl\hline
+  \def\@tabarray{%
+    \let\hline\LT@@hl
+    \LT@@tabarray}%
+  \let\\\LT@tabularcr\let\tabularnewline\\%
+  \def\newpage{\noalign{\break}}%
+  \def\pagebreak{\noalign{\ifnum`}=0\fi\@testopt{\LT@no@pgbk-}4}%
+  \def\nopagebreak{\noalign{\ifnum`}=0\fi\@testopt\LT@no@pgbk4}%
+  \let\hline\LT@hline \let\kill\LT@kill\let\caption\LT@caption
+  \@tempdima\ht\strutbox
+  \let\@endpbox\LT@endpbox
+  \ifx\extrarowheight\@undefined
+    \let\@acol\@tabacol
+    \let\@classz\@tabclassz \let\@classiv\@tabclassiv
+    \def\@startpbox{\vtop\LT@startpbox}%
+    \let\@@startpbox\@startpbox
+    \let\@@endpbox\@endpbox
+    \let\LT@LL@FM@cr\@tabularcr
+  \else
+    \advance\@tempdima\extrarowheight
+    \col@sep\tabcolsep
+    \let\@startpbox\LT@startpbox\let\LT@LL@FM@cr\@arraycr
+  \fi
+  \setbox\@arstrutbox\hbox{\vrule
+    \@height \arraystretch \@tempdima
+    \@depth \arraystretch \dp \strutbox
+    \@width \z@}%
+  \let\@sharp##\let\protect\relax
+   \begingroup
+    \@mkpream{#2}%
+    \xdef\LT@bchunk{%
+       \global\advance\c@LT@chunks\@ne
+       \global\LT@rows\z@\setbox\z@\vbox\bgroup
+       \LT@setprevdepth
+       \tabskip\LTleft \noexpand\halign to\hsize\bgroup
+      \tabskip\z@ \@arstrut \@preamble \tabskip\LTright \cr}%
+  \endgroup
+  \expandafter\LT@nofcols\LT@bchunk&\LT@nofcols
+  \LT@make@row
+  \m@th\let\par\@empty
+  \everycr{}\lineskip\z@\baselineskip\z@
+  \LT@bchunk}
+}
+
+%% Festlegen der Default-Einstellungen fuer die Positionierungsparameter der Fliessumgebungen table und figure
+\def\fps@figure{htb}
+\def\fps@table{htb}
+
+\newcommand{\setdefaulttablepos}[1]{
+	\def\fps@table{#1}
+}
+\newcommand{\setdefaultfigurepos}[1]{
+	\def\fps@figure{#1}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\wiwwubildertabellen@Quelle}{Quelle} % fuer die Sprachoption
+\newboolean{wiwwubildertabellen@anhang} % boolean, der speichter, ob sich die Umgebung im Anhang befindet
+\setboolean{wiwwubildertabellen@anhang}{false}
+%\newboolean{wiwwubildertabellen@fliessendeUmgebung} ueberfluesig?
+%\setboolean{wiwwubildertabellen@fliessendeUmgebung}{true} ueberfluessig?
+
+%% Umdefinieren des Anhang-Befehls, damit der boolean gesetzt wird...
+\newcommand{\wiwwubildertabellen@myappendixanh}{}
+\let\wiwwubildertabellen@myappendixanh=\appendix
+\renewcommand{\appendix}{%
+	\setboolean{wiwwubildertabellen@anhang}{true}
+	\wiwwubildertabellen@myappendixanh
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcolumntype{,}{D{.}{,}{-1}} % Spaltentyp ",", der die Ausrichtung von Zahlen am Komma ermoeglicht
+\newcolumntype{d}[1]{D{.}{,}{#1}} % Spaltentyp "d{1.2}", ebenso nur mit einer stelle links und 2 rechts 
+
+% Tabellen!! %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\wiwwubildertabellen@tabellequelle}{}
+\newcommand{\wiwwubildertabellen@tabellelabel}{}
+\newcommand{\wiwwubildertabellen@tabellecaption}{}
+\newcommand{\tabellecentering}{\centering}
+\newcommand{\wiwwubildertabellen@tabellerotation}{0}
+\newcommand{\wiwwubildertabellen@tabelletextsize}{}
+\newcommand{\ltabellepos}{c}
+\newcommand{\wiwwubildertabellen@ltabellerotstart}{}
+\newcommand{\wiwwubildertabellen@ltabellerotend}{}
+\newcommand{\wiwwubildertabellen@tabellecaptiontoc}{}
+\newcommand{\wiwwubildertabellen@ownpage}{}
+\newcommand{\wiwwubildertabellen@pos}{}
+\newcommand{\wiwwubildertabellen@ltabellequelleadd}{}
+\newboolean{wiwwubildertabellen@ownfootnotes}
+\newboolean{wiwwubildertabellen@wrap}
+\newboolean{wiwwubildertabellen@nonfloat}
+\newcommand{\wiwwubildertabellen@tabellereset}{%
+	\renewcommand{\wiwwubildertabellen@tabellequelle}{}
+	\renewcommand{\wiwwubildertabellen@tabellelabel}{}
+	\renewcommand{\wiwwubildertabellen@tabellerotation}{0}
+	\renewcommand{\wiwwubildertabellen@tabelletextsize}{}
+	\renewcommand{\wiwwubildertabellen@ltabellerotstart}{}
+	\renewcommand{\wiwwubildertabellen@ltabellerotend}{}
+	\renewcommand{\wiwwubildertabellen@ownpage}{}
+	\renewcommand{\wiwwubildertabellen@ltabellequelleadd}{}
+	\renewcommand{\wiwwubildertabellen@pos}{}
+	\setboolean{wiwwubildertabellen@wrap}{false}
+	\setboolean{wiwwubildertabellen@ownfootnotes}{false}
+	\setboolean{wiwwubildertabellen@nonfloat}{false}
+}
+\define@key{tabelle}{toc}{\renewcommand{\wiwwubildertabellen@tabellecaptiontoc}{#1}}
+\define@key{tabelle}{quelle}{%
+	\renewcommand{\wiwwubildertabellen@tabellequelle}{\vspace*{1ex}\normalsize \hfill \wiwwubildertabellen@Quelle : #1 \par \vspace*{-1ex}}
+	\renewcommand{\wiwwubildertabellen@ltabellequelleadd}{\vspace*{-3ex}}
+}
+\define@key{tabelle}{label}{\renewcommand{\wiwwubildertabellen@tabellelabel}{\label{#1}}}
+\define@key{tabelle}{angle}{\renewcommand{\wiwwubildertabellen@tabellerotation}{#1}}
+\define@key{tabelle}{textsize}{\renewcommand{\wiwwubildertabellen@tabelletextsize}{#1}}
+\define@key{tabelle}{ownpage}[true]{\renewcommand{\wiwwubildertabellen@ownpage}{\afterpage{\clearpage}}}
+\define@key{tabelle}{pos}{\renewcommand{\wiwwubildertabellen@pos}{#1}}
+\define@key{tabelle}{turn}[true]{%
+	\renewcommand{\wiwwubildertabellen@tabellerotation}{90}
+	\renewcommand{\wiwwubildertabellen@ltabellerotstart}{\begin{landscape}}
+	\renewcommand{\wiwwubildertabellen@ltabellerotend}{\end{landscape}}%
+}
+\define@key{tabelle}{nonfloat}[true]{\setboolean{wiwwubildertabellen@nonfloat}{true}}
+\define@key{tabelle}{ownfootnotes}[true]{\setboolean{wiwwubildertabellen@ownfootnotes}{true}}
+\AfterPackage{wrapfig}{
+	\define@key{tabelle}{wrap}[true]{\setboolean{wiwwubildertabellen@wrap}{true}}
+}
+
+\newenvironment{tabelle}[3][]{% Parameter, Beschriftung, Spalten
+	\renewcommand{\wiwwubildertabellen@tabellecaptiontoc}{#2}%
+	\setkeys{tabelle}{#1}%
+	\ifthenelse{\boolean{wiwwubildertabellen@anhang}}{%
+		\ifthenelse{\boolean{wiwwubildertabellen@nonfloat}}{%
+			\renewcommand{\wiwwubildertabellen@tabellecaption}{\captionof{table}[]{\normalsize #2}}%
+		}{%
+			\renewcommand{\wiwwubildertabellen@tabellecaption}{\caption[]{\normalsize #2}}%
+		}%
+	}{%
+		\ifthenelse{\boolean{wiwwubildertabellen@nonfloat}}{%
+			\renewcommand{\wiwwubildertabellen@tabellecaption}{\captionof{table}[\wiwwubildertabellen@tabellecaptiontoc]{\normalsize #2}}%
+		}{%
+			\renewcommand{\wiwwubildertabellen@tabellecaption}{\caption[\wiwwubildertabellen@tabellecaptiontoc]{\normalsize #2}}%
+		}%
+	}%
+	\ifthenelse{\boolean{wiwwubildertabellen@bilderbeamer} \or \boolean{wiwwubildertabellen@ownfootnotes}}{}{\savenotes}%
+		
+	\ifthenelse{\boolean{wiwwubildertabellen@wrap}}{%
+		\begin{wraptable}{\wiwwubildertabellen@pos}%
+    }{%
+       	\ifthenelse{\boolean{wiwwubildertabellen@nonfloat}}{%
+       		\vspace{\intextsep}\noindent\begin{minipage}{\linewidth}\noindent
+       	}{%
+	       	\ifthenelse{\equal{\wiwwubildertabellen@pos}{}}{%
+	       	    \begin{table}
+	       	}{%
+	       		\begin{table\expandafter}\expandafter[\wiwwubildertabellen@pos]
+	        }%                                
+	    }%
+	    \tabellecentering%
+    }
+    	\begin{turn}{\wiwwubildertabellen@tabellerotation}
+			\wiwwubildertabellen@tabelletextsize
+			\ifthenelse{\boolean{wiwwubildertabellen@ownfootnotes}}{\begin{minipage}{\linewidth}}{}
+				\begin{tabular}{#3}
+}{%
+				\end{tabular}
+			\ifthenelse{\boolean{wiwwubildertabellen@ownfootnotes}}{\end{minipage}}{}
+		\end{turn}
+
+		\normalsize\wiwwubildertabellen@tabellequelle
+		\wiwwubildertabellen@tabellecaption\wiwwubildertabellen@tabellelabel
+	\ifthenelse{\boolean{wiwwubildertabellen@wrap}}{%
+		\end{wraptable}%
+	}{%
+		\ifthenelse{\boolean{wiwwubildertabellen@nonfloat}}{%
+			\end{minipage}\vspace{\intextsep}
+		}{%
+			\ifthenelse{\equal{\wiwwubildertabellen@pos}{}}{%
+				\end{table}%
+			}{%
+				\end{table\expandafter}%
+			}%
+		}%
+	}
+	\ifthenelse{\boolean{wiwwubildertabellen@bilderbeamer} \or \boolean{wiwwubildertabellen@ownfootnotes}}{}{\spewnotes}%
+	\wiwwubildertabellen@ownpage%
+	\wiwwubildertabellen@tabellereset%
+}
+
+
+\ifthenelse{\boolean{wiwwubildertabellen@bilderbeamer}}{ % nur fuer den Fall, dass beamer verwendet wird...
+	\renewenvironment{tabelle}[2][]{% Parameter, Spalten
+		\setkeys{tabelle}{#1}
+
+		\begin{turn}{\wiwwubildertabellen@tabellerotation}
+			\begin{tabular}{#2}
+	}{%
+			\end{tabular}
+		\end{turn}
+
+		\wiwwubildertabellen@tabellequelle
+
+		\wiwwubildertabellen@tabellereset%
+	}
+}{}
+
+\newenvironment{ltabelle}[7][]{% Parameter, Beschriftung, Spalten, erster Kopf, Koepfe, Fuesse, letzter Fuss
+	\renewcommand{\wiwwubildertabellen@tabellecaptiontoc}{#2}
+	\setkeys{tabelle}{#1}
+	%\renewcommand{\wiwwubildertabellen@tabellecaption}{\def\@captype{table}\ContinuedFloat\captionof{table}[]{#2}}
+	\renewcommand{\wiwwubildertabellen@tabellecaption}{\ifthenelse{\boolean{wiwwubildertabellen@anhang}}{}{\captionof{table}{#2}}}
+	\wiwwubildertabellen@tabelletextsize
+	\wiwwubildertabellen@ltabellerotstart
+	\begin{longtable}[\ltabellepos]{#3}
+		#4\endfirsthead
+		#5\endhead
+		#6\endfoot
+		#7\endlastfoot
+}{%
+	\end{longtable}
+	\vspace*{-3ex}\normalsize
+	\wiwwubildertabellen@ltabellequelleadd\wiwwubildertabellen@tabellequelle
+	\wiwwubildertabellen@tabellecaption
+	\wiwwubildertabellen@ltabellerotend%
+	\wiwwubildertabellen@tabellereset%
+}
+
+\ifthenelse{\boolean{wiwwubildertabellen@bilderbeamer}}{ % nur fuer den Fall, dass beamer verwendet wird...
+	\renewenvironment{ltabelle}[7][]{
+		\PackageError{wiwwubildertabellen}{Environment "ltabelle" not available with package "beamer"}
+	}{}
+}{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Grafiken!! %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\wiwwubildertabellen@grafikquelle}{}
+\newcommand{\grafikcentering}{\centering}
+\newcommand{\wiwwubildertabellen@grafiklabelext}{}
+\newcommand{\wiwwubildertabellen@grafiklabelint}{}
+\newcommand{\wiwwubildertabellen@grafikcaptiontoc}{}
+\newcommand{\wiwwubildertabellen@grafikgroesse}{1}
+\newcommand{\wiwwubildertabellen@grafikgroesses}{1}
+\newcommand{\wiwwubildertabellen@grafikgroessetpxh}{\height}
+\newcommand{\wiwwubildertabellen@grafikgroessetpxw}{\width}
+\newlength{\wiwwubildertabellen@grafikgroessetpxhl}
+\newlength{\wiwwubildertabellen@grafikgroessetpxwl}
+\newcommand{\wiwwubildertabellen@grafikgroessetyp}{scale}
+\newcommand{\wiwwubildertabellen@grafikrotation}{0}
+\newcommand{\wiwwubildertabellen@grafikorigin}{c}
+\newcommand{\wiwwubildertabellen@grafikcaption}{}
+\newcommand{\wiwwubildertabellen@grafikextra}{}
+\newboolean{wiwwubildertabellen@pdf}
+\newcommand{\wiwwubildertabellen@grafikresetext}{%
+	\renewcommand{\wiwwubildertabellen@grafikquelle}{}
+	\renewcommand{\wiwwubildertabellen@grafiklabelext}{}
+	\renewcommand{\wiwwubildertabellen@ownpage}{}
+	\renewcommand{\wiwwubildertabellen@pos}{}
+	\setboolean{wiwwubildertabellen@wrap}{false}
+	\setboolean{wiwwubildertabellen@nonfloat}{false}
+}
+\newcommand{\wiwwubildertabellen@grafikresetint}{%
+	\renewcommand{\wiwwubildertabellen@grafikgroesse}{1}
+	\renewcommand{\wiwwubildertabellen@grafikgroessetyp}{scale}
+	\renewcommand{\wiwwubildertabellen@grafikrotation}{0}
+	\renewcommand{\wiwwubildertabellen@grafikgroesses}{1}
+	\renewcommand{\wiwwubildertabellen@grafikgroessetpxh}{\height}
+	\renewcommand{\wiwwubildertabellen@grafikgroessetpxw}{\width}
+	\renewcommand{\wiwwubildertabellen@grafiklabelint}{}
+	\renewcommand{\wiwwubildertabellen@grafikorigin}{c}
+	\renewcommand{\wiwwubildertabellen@grafikextra}{}
+	\setboolean{wiwwubildertabellen@pdf}{false}
+}
+\newcommand{\wiwwubildertabellen@grafikreset}{%
+	\wiwwubildertabellen@grafikresetint
+	\wiwwubildertabellen@grafikresetext
+}
+\define@key{grafikext}{toc}{\renewcommand{\wiwwubildertabellen@grafikcaptiontoc}{#1}}
+\define@key{grafikext}{quelle}{\renewcommand{\wiwwubildertabellen@grafikquelle}{\hfill \wiwwubildertabellen@Quelle : #1 \par \vspace*{-1ex}}}
+\define@key{grafikext}{label}{\renewcommand{\wiwwubildertabellen@grafiklabelext}{\label{#1}}}
+\define@key{grafikint}{label}{\renewcommand{\wiwwubildertabellen@grafiklabelint}{\label{#1}}}
+\define@key{grafikint}{angle}{\renewcommand{\wiwwubildertabellen@grafikrotation}{#1}}
+\define@key{grafikext}{ownpage}[true]{\renewcommand{\wiwwubildertabellen@ownpage}{\afterpage{\clearpage}}}
+\define@key{grafikext}{pos}{\renewcommand{\wiwwubildertabellen@pos}{#1}}
+\define@key{grafikint}{turn}[true]{\renewcommand{\wiwwubildertabellen@grafikrotation}{90}}
+\define@key{grafikint}{origin}{\renewcommand{\wiwwubildertabellen@grafikorigin}{#1}}
+\define@key{grafikint}{extra}{\renewcommand{\wiwwubildertabellen@grafikextra}{#1}}
+\define@key{grafikint}{scale}{%
+	\renewcommand{\wiwwubildertabellen@grafikgroessetyp}{scale}
+	\renewcommand{\wiwwubildertabellen@grafikgroesse}{#1}
+	\renewcommand{\wiwwubildertabellen@grafikgroesses}{#1}%
+}
+\define@key{grafikint}{height}{%
+	\renewcommand{\wiwwubildertabellen@grafikgroessetyp}{height}
+	\renewcommand{\wiwwubildertabellen@grafikgroesse}{#1}
+	\setlength{\wiwwubildertabellen@grafikgroessetpxhl}{#1}
+	\renewcommand{\wiwwubildertabellen@grafikgroessetpxh}{\wiwwubildertabellen@grafikgroessetpxhl}%
+}
+\define@key{grafikint}{width}{%
+	\renewcommand{\wiwwubildertabellen@grafikgroessetyp}{width}
+	\renewcommand{\wiwwubildertabellen@grafikgroesse}{#1}
+	\setlength{\wiwwubildertabellen@grafikgroessetpxwl}{#1}
+	\renewcommand{\wiwwubildertabellen@grafikgroessetpxw}{\wiwwubildertabellen@grafikgroessetpxwl}%
+}
+\define@key{grafikint}{pdf}[true]{\setboolean{wiwwubildertabellen@pdf}{true}}
+\define@key{grafikext}{wrap}[true]{\setboolean{wiwwubildertabellen@wrap}{true}}
+\define@key{grafikext}{nonfloat}[true]{\setboolean{wiwwubildertabellen@nonfloat}{true}}
+\newcommand{\Grafik}[3][]{% Parameter, Datei, Beschriftung
+	\renewcommand{\wiwwubildertabellen@grafikcaption}{#3}
+	\renewcommand{\wiwwubildertabellen@grafikcaptiontoc}{#3}%
+	\setkeys{grafikext,grafikint}{#1}%
+	\ifthenelse{\boolean{wiwwubildertabellen@wrap}}{%
+	    \begin{wrapfigure}{\wiwwubildertabellen@pos}{0pt}
+    }{%
+    	\ifthenelse{\boolean{wiwwubildertabellen@nonfloat}}{%
+			\vspace{\intextsep}\noindent\begin{minipage}{\linewidth}\captionsetup{type=figure}\noindent
+    	}{%
+	    	\ifthenelse{\equal{\wiwwubildertabellen@pos}{}}{%
+	    		\begin{figure}
+	    	}{%	
+	    		\begin{figure\expandafter}\expandafter[\wiwwubildertabellen@pos]
+	        }%
+	    }%
+		\grafikcentering	
+    }%
+	\ifthenelse{\boolean{wiwwubildertabellen@pdf}}{%
+		\vspace*{-1cm}
+		\hspace*{-1.2cm}
+	}{}
+	\includegraphics[\wiwwubildertabellen@grafikgroessetyp=\wiwwubildertabellen@grafikgroesse,angle=\wiwwubildertabellen@grafikrotation,origin=\wiwwubildertabellen@grafikorigin,\wiwwubildertabellen@grafikextra]{#2}
+	\ifthenelse{\boolean{wiwwubildertabellen@pdf}}{%
+		\vspace*{1cm}
+	}{}
+	
+	\wiwwubildertabellen@grafikquelle
+	\ifthenelse{\boolean{wiwwubildertabellen@anhang}}{%
+		\caption[]{#3}
+	}{%
+		\caption[\wiwwubildertabellen@grafikcaptiontoc]{#3}
+	}%
+	\wiwwubildertabellen@grafiklabelext
+	\ifthenelse{\boolean{wiwwubildertabellen@nonfloat}}{%
+		\end{minipage}\vspace{\intextsep}
+	}{}%
+	\ifthenelse{\boolean{wiwwubildertabellen@wrap}}{%
+		\end{wrapfigure}%
+	}{%
+		\ifthenelse{\boolean{wiwwubildertabellen@nonfloat}}{}{%
+			\ifthenelse{\equal{\wiwwubildertabellen@pos}{}}{%
+				\end{figure}
+			}{%
+				\end{figure\expandafter}%
+			}%
+		}%
+	}
+	
+	\wiwwubildertabellen@ownpage%
+	\wiwwubildertabellen@grafikreset%
+}
+
+\newenvironment{multiGrafik}[2][]{% Parameter, Beschriftung
+	\renewcommand{\wiwwubildertabellen@grafikcaption}{#2}
+	\renewcommand{\wiwwubildertabellen@grafikcaptiontoc}{#2}%
+	\setkeys{grafikext}{#1}%
+	\ifthenelse{\boolean{wiwwubildertabellen@wrap}}{%
+	    \wrapfigure{\wiwwubildertabellen@pos}{0pt}
+	}{%
+		\ifthenelse{\boolean{wiwwubildertabellen@nonfloat}}{%
+			\vspace{\intextsep}\noindent\begin{minipage}{\linewidth}\captionsetup{type=figure}\noindent
+		}{%
+			\ifthenelse{\equal{\wiwwubildertabellen@pos}{}}{%
+				\begin{figure}
+			}{%	
+				\begin{figure\expandafter}\expandafter[\wiwwubildertabellen@pos]
+			}%
+		}%
+		\grafikcentering
+	}
+}{%
+	\wiwwubildertabellen@grafikquelle
+	\ifthenelse{\boolean{wiwwubildertabellen@anhang}}{
+		\caption[]{\wiwwubildertabellen@grafikcaption}
+	}{%
+		\caption[\wiwwubildertabellen@grafikcaptiontoc]{\wiwwubildertabellen@grafikcaption}
+	}%
+	\ifthenelse{\boolean{wiwwubildertabellen@nonfloat}}{%
+		\end{minipage}\vspace{\intextsep}
+	}{}%
+	\wiwwubildertabellen@grafiklabelext
+	\ifthenelse{\boolean{wiwwubildertabellen@wrap}}{%
+		\endwrapfigure%
+	}{%
+		\ifthenelse{\boolean{wiwwubildertabellen@nonfloat}}{}{%
+			\ifthenelse{\equal{\wiwwubildertabellen@pos}{}}{%
+				\end{figure}
+			}{%
+				\end{figure\expandafter}
+			}%
+		}%
+	}
+	
+	\wiwwubildertabellen@ownpage%
+	\wiwwubildertabellen@grafikresetext%
+}
+
+\AfterPackage*{subfig}{
+	\newcommand{\subGrafik}[3][]{% Parameter, Datei, Beschriftung
+		\setkeys{grafikint}{#1}%
+		\subfloat[][#3\wiwwubildertabellen@grafiklabelint]{%
+			\ifthenelse{\boolean{wiwwubildertabellen@pdf}}{
+				\vspace*{-1cm}
+				\hspace*{-1.2cm}
+			}{}
+			\includegraphics[\wiwwubildertabellen@grafikgroessetyp=\wiwwubildertabellen@grafikgroesse,angle=\wiwwubildertabellen@grafikrotation,origin=\wiwwubildertabellen@grafikorigin,\wiwwubildertabellen@grafikextra]{#2}%
+			\ifthenelse{\boolean{wiwwubildertabellen@pdf}}{
+				\vspace*{1cm}
+			}{}
+		}%
+		\wiwwubildertabellen@grafikresetint%
+	}
+}
+
+\AfterPackage*{floatrow}{%
+ 	\newcommand{\mixedcentering}{\centering}
+ 	\DeclareNewFloatType{wiwwubildertabellen@mixedtypefloat}{placement=tbh,fileext=mtf}
+ 	
+ 	\newcommand{\wiwwubildertabellen@mixedreset}{%
+ 		\renewcommand{\wiwwubildertabellen@ownpage}{}
+ 		\renewcommand{\wiwwubildertabellen@pos}{}
+ 	}
+ 	
+ 	\define@key{mixedext}{ownpage}[true]{\renewcommand{\wiwwubildertabellen@ownpage}{\afterpage{\clearpage}}}
+ 	\define@key{mixedext}{pos}{\renewcommand{\wiwwubildertabellen@pos}{#1}}
+
+	\newenvironment{mixedfloat}[1][]{% Parameter
+		\setkeys{mixedext}{#1}%
+
+    	\ifthenelse{\equal{\wiwwubildertabellen@pos}{}}{%
+    		\begin{wiwwubildertabellen@mixedtypefloat}
+    	}{%
+    		\begin{wiwwubildertabellen@mixedtypefloat\expandafter}\expandafter[\wiwwubildertabellen@pos]
+        }%
+		\mixedcentering\RawFloats
+	}{%
+		\ifthenelse{\equal{\wiwwubildertabellen@pos}{}}{%
+			\end{wiwwubildertabellen@mixedtypefloat}
+		}{%
+			\end{wiwwubildertabellen@mixedtypefloat\expandafter}%
+		}%
+
+		\wiwwubildertabellen@ownpage%
+		\wiwwubildertabellen@mixedreset%
+	}
+}
+
+\ifthenelse{\boolean{wiwwubildertabellen@bilderbeamer}}{ % nur fuer den Fall, dass beamer verwendet wird...
+	\newcommand<>{\Grafik}[2][]{% Parameter, Datei
+		\setkeys{grafikext,grafikint}{#1}
+		\ifthenelse{\equal{#3}{}}{
+			%\only<+>{
+				\ifthenelse{\boolean{wiwwubildertabellen@pdf}}{
+    				\vspace*{-1cm}
+					\hspace*{-1.2cm}
+    			}{}
+				\includegraphics[\wiwwubildertabellen@grafikgroessetyp=\wiwwubildertabellen@grafikgroesse,angle=\wiwwubildertabellen@grafikrotation]{#2}
+				\ifthenelse{\boolean{wiwwubildertabellen@pdf}}{
+    				\vspace*{1cm}
+    			}{}
+    			
+				\wiwwubildertabellen@grafikquelle
+				\wiwwubildertabellen@grafiklabelext
+			%}
+		}{
+			\only#3{
+				\setkeys{grafikext,grafikint}{#1}
+				\ifthenelse{\boolean{wiwwubildertabellen@pdf}}{
+    				\vspace*{-1cm}
+					\hspace*{-1.2cm}
+    			}{}
+				\includegraphics[\wiwwubildertabellen@grafikgroessetyp=\wiwwubildertabellen@grafikgroesse,angle=\wiwwubildertabellen@grafikrotation]{#2}
+    			\ifthenelse{\boolean{wiwwubildertabellen@pdf}}{
+    				\vspace*{1cm}
+    			}{}
+    			
+				\wiwwubildertabellen@grafikquelle
+				\wiwwubildertabellen@grafiklabelext
+			}
+		}
+		\wiwwubildertabellen@grafikreset
+	}
+}{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifthenelse{\boolean{wiwwubildertabellen@tabularx}}{%
+	\newenvironment{tabellex}[4][]{% Parameter, Beschriftung, Spalten, Breite
+		\renewcommand{\wiwwubildertabellen@tabellecaptiontoc}{#2}
+		\setkeys{tabelle}{#1}
+		\ifthenelse{\boolean{wiwwubildertabellen@anhang}}{%
+			\renewcommand{\wiwwubildertabellen@tabellecaption}{\caption[]{\normalsize #2}}
+		}{%
+			\renewcommand{\wiwwubildertabellen@tabellecaption}{\caption[\wiwwubildertabellen@tabellecaptiontoc]{\normalsize #2}}
+		}
+		\ifthenelse{\boolean{wiwwubildertabellen@bilderbeamer}}{}{\savenotes}
+		\ifthenelse{\equal{\wiwwubildertabellen@pos}{}}{%
+			\table
+		}{%	
+			\expandafter\table\expandafter[\wiwwubildertabellen@pos]
+		}%	
+			\tabellecentering%
+			\turn{\wiwwubildertabellen@tabellerotation}
+				\wiwwubildertabellen@tabelletextsize
+				\tabularx{#4}{#3}
+	}{%
+				\endtabularx
+			\endturn
+
+			\normalsize\wiwwubildertabellen@tabellequelle
+			\wiwwubildertabellen@tabellecaption\wiwwubildertabellen@tabellelabel
+		\ifthenelse{\equal{\wiwwubildertabellen@pos}{}}{%
+			\endtable
+		}{%
+			\expandafter\endtable
+		}%
+		\ifthenelse{\boolean{wiwwubildertabellen@bilderbeamer}}{}{\spewnotes}
+		\wiwwubildertabellen@ownpage
+		\wiwwubildertabellen@tabellereset%
+	}
+	
+	% neue Spaltentypen mit flexibler Breite definieren
+	\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+	\newcolumntype{R}{>{\raggedleft\arraybackslash}X}
+	\newcolumntype{C}{>{\centering\arraybackslash}X}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	\ifthenelse{\boolean{wiwwubildertabellen@bilderbeamer}}{ % nur fuer den Fall, dass beamer verwendet wird...
+		\renewenvironment{tabelle}[3][]{% Parameter, Spalten, Breite
+			\setkeys{tabelle}{#1}
+
+			\turn{\wiwwubildertabellen@tabellerotation}
+				\tabularx{#3}{#2}
+		}{%
+				\endtabularx
+			\endturn
+
+			\wiwwubildertabellen@tabellequelle
+
+			\wiwwubildertabellen@tabellereset%
+		}
+	}
+}{}
+\DisableKeyvalOption{wiwwubildertabellen}{tabularx}
+
+\ifthenelse{\boolean{wiwwubildertabellen@TpX}}{%
+ 	\g@addto@macro\wiwwubildertabellen@grafikresetint{\renewcommand{\wiwwubildertabellen@grafikimport}{}}
+ 	\newcommand{\TpXGrafik}[3][]{% Parameter, Datei, Beschriftung
+ 		\renewcommand{\wiwwubildertabellen@grafikcaptiontoc}{#3}
+ 		\setkeys{grafikext,grafikint}{#1}
+ 		\ifthenelse{\boolean{wiwwubildertabellen@wrap}}{%
+ 		    \begin{wrapfigure}{\wiwwubildertabellen@pos}{0pt}
+         }{%
+         	\ifthenelse{\equal{\wiwwubildertabellen@pos}{}}{%
+         		\begin{figure}
+            }{%
+            	\begin{figure\expandafter}\expandafter[\wiwwubildertabellen@pos]
+            }%     
+ 				\grafikcentering
+         }
+ 				\resizebox{!}{\wiwwubildertabellen@grafikgroessetpxh}{\resizebox{\wiwwubildertabellen@grafikgroessetpxw}{!}{\scalebox{\wiwwubildertabellen@grafikgroesses}{%
+ 					\ifthenelse{\equal{\wiwwubildertabellen@grafikimport}{}}{
+ 						\input{#2}%
+ 					}{
+ 						\import{\wiwwubildertabellen@grafikimport}{#2}%
+ 					}%
+ 				}}}
+ 	
+ 				\wiwwubildertabellen@grafikquelle
+ 				\ifthenelse{\boolean{wiwwubildertabellen@anhang}}{
+ 					\caption[]{#3}
+ 				}{
+ 					\caption[\wiwwubildertabellen@grafikcaptiontoc]{#3}
+ 				}\wiwwubildertabellen@grafiklabelext
+ 		\ifthenelse{\boolean{wiwwubildertabellen@wrap}}{%
+ 			\end{wrapfigure}
+ 		}{%
+ 			\ifthenelse{\equal{\wiwwubildertabellen@pos}{}}{%
+				\end{figure}
+			}{%
+				\end{figure\expandafter}%
+			}%
+ 		}
+ 		\wiwwubildertabellen@ownpage
+ 		\wiwwubildertabellen@grafikreset
+ 	}
+ 	
+ 	\AfterPackage*{subfig}{
+ 		\newcommand{\subTpXGrafik}[3][]{% Parameter, Datei, Beschriftung
+ 			\setkeys{grafikint}{#1}%
+ 			\subfloat[][#3\wiwwubildertabellen@grafiklabelint]{%
+ 				\resizebox{!}{\wiwwubildertabellen@grafikgroessetpxh}{\resizebox{\wiwwubildertabellen@grafikgroessetpxw}{!}{\scalebox{\wiwwubildertabellen@grafikgroesses}{%
+ 					\ifthenelse{\equal{\wiwwubildertabellen@grafikimport}{}}{%
+ 						\input{#2}%
+ 					}{%
+ 						\import{\wiwwubildertabellen@grafikimport}{#2}%
+ 					}%
+ 				}}}
+ 				}%
+ 			\wiwwubildertabellen@grafikresetint%
+ 		}
+ 	}
+ 
+ 	\ifthenelse{\boolean{wiwwubildertabellen@bilderbeamer}}{ % nur fuer den Fall, dass beamer verwendet wird...
+ 		\newcommand<>{\TpXGrafik}[2][]{% Parameter, Datei
+ 			\setkeys{grafikext,grafikint}{#1}
+ 			\ifthenelse{\equal{#3}{}}{
+ 				\only<+>{
+ 					\resizebox{!}{\wiwwubildertabellen@grafikgroessetpxh}{\resizebox{\wiwwubildertabellen@grafikgroessetpxw}{!}{\scalebox{\wiwwubildertabellen@grafikgroesses}{%
+ 						\ifthenelse{\equal{\wiwwubildertabellen@grafikimport}{}}{
+ 							\input{#2}%
+ 						}{
+ 							\import{\wiwwubildertabellen@grafikimport}{#2}%
+ 						}%
+ 					}}}
+ 
+ 					\wiwwubildertabellen@grafikquelle
+ 				}
+ 			}{
+ 				\only#3{
+ 					\resizebox{!}{\wiwwubildertabellen@grafikgroessetpxh}{\resizebox{\wiwwubildertabellen@grafikgroessetpxw}{!}{\scalebox{\wiwwubildertabellen@grafikgroesses}{%
+ 						\ifthenelse{\equal{\wiwwubildertabellen@grafikimport}{}}{
+ 							\input{#2}%
+ 						}{
+ 							\import{\wiwwubildertabellen@grafikimport}{#2}%
+ 						}%
+ 					}}}
+ 
+ 					\wiwwubildertabellen@grafikquelle
+ 				}
+ 			}
+ 			\wiwwubildertabellen@grafikreset
+ 		}
+ 	}{}
+}{}
+\DisableKeyvalOption{wiwwubildertabellen}{TpX}

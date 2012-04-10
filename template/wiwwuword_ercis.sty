@@ -1,0 +1,195 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{wiwwuword_ercis}[2008/04/10 Basis-Befehle fuer ERCIS-Stil (von Stephan Dlugosz) Vers. 0.5.5]
+
+\RequirePackage{xcolor}
+
+\RequirePackage{cmbright}
+\RequirePackage[scaled]{uarial}
+
+\definecolor{ercisgray}{gray}{0.5}
+
+\newcommand{\Nummer}{}
+\newcommand{\setNummer}[1]{\renewcommand{\Nummer}{#1}}
+\newcommand{\Jahr}{}
+\newcommand{\setJahr}[1]{\renewcommand{\Jahr}{#1}}
+\newcommand{\AutorCiteAs}{\Autor}
+\newcommand{\setAutorCiteAs}[1]{\renewcommand{\AutorCiteAs}{#1}}
+
+\geometry{inner=2cm, bindingoffset=1cm, textwidth=16cm, top=2.7cm, textheight=24.5cm}
+\AfterPackage{wiwwubildertabellen}{
+	\renewcommand{\grafikcentering}{} % keine zentrierung
+	\renewcommand{\tabellecentering}{} % keine zentrierung
+	\renewcommand{\ltabellepos}{l} % keine zentrierung
+	\deffootnote{0.75cm}{0.75cm}{\textsuperscript{\normalfont\makebox[0.75cm][l]{\thefootnotemark}}} % Fussnotenstil
+}
+\setbibstyle{dinat}
+
+\setheadsepline{0pt}
+\newcommand{\wiwwuwordercis@linkerKopf}{\makebox[0pt][r]{\color{ercisgray}\raisebox{0.1ex}{\rule{0.9ex}{0.9ex}}~}\pagemark}
+\newcommand{\wiwwuwordercis@rechterKopf}{\pagemark\makebox[0pt][l]{~\color{ercisgray}\raisebox{0.1ex}{\rule{0.9ex}{0.9ex}}}}
+\rohead[\wiwwuwordercis@rechterKopf]{\wiwwuwordercis@rechterKopf}
+\lehead[\wiwwuwordercis@linkerKopf]{\wiwwuwordercis@linkerKopf}
+
+\renewcommand{\footnoterule}{\hrule width 5cm height 1pt \vspace{1ex}}
+
+% Kapitel-Ueberschriften
+\ifthenelse{\boolean{istartcl}}{
+	\PackageError{wiwwuword_ercis}{Only with report class!!}
+}{%
+	\titleformat{\chapter}%
+	  {\normalfont\Large\bfseries}%
+	  {\makebox[0pt][l]{\thechapter}}%
+	  {1.5cm}%
+	  {}%
+	\titlespacing{\chapter}{0pt}{-4ex}{8pt}
+	\titleformat{\section}%
+	  {\normalfont\large\bfseries}%
+	  {\makebox[0pt][l]{\thesection}}%
+	  {1.5cm}%
+	  {}%
+	\titlespacing{\section}{0pt}{16pt}{8pt}
+	\titleformat{\subsection}%
+	  {\normalfont\large\bfseries}%
+	  {\makebox[0pt][l]{\thesubsection}}%
+	  {1.5cm}%
+	  {}%
+	\titlespacing{\subsection}{0pt}{16pt}{8pt}
+	\titleformat{\subsubsection}%
+	  {\normalfont\normalsize\bfseries}%
+	  {\makebox[0pt][l]{\thesubsubsection}}%
+	  {1.5cm}%
+	  {}%
+	\titlespacing{\subsubsection}{0pt}{16pt}{8pt}
+	\titleformat{\paragraph}%
+	  {\itshape\normalsize}%
+	  {}%
+	  {0cm}%
+	  {}%
+	\titlespacing{\paragraph}{0pt}{16pt}{0pt}
+	
+	%% Abgeaendert aus der KOMA-Script Klasse scrbook
+	\renewcommand\minisec[1]{\@afterindentfalse \vskip 1.5ex
+      {\parindent \z@
+      \raggedsection\normalfont\itshape\nobreak#1\par\nobreak}\nobreak
+      \@afterheading}
+}
+
+\setlength{\bibhang}{1.5cm}
+\setlength{\bibsep}{0pt}
+
+\DeclareCaptionLabelSeparator{mylabelsep}{\hspace*{2.5cm}}
+\DeclareCaptionLabelFormat{mylabelformat}{\makebox[0pt][l]{#1~#2:}~}
+\captionsetup{labelformat={mylabelformat},labelfont={bf},labelsep=mylabelsep,format=hang,singlelinecheck=false}
+
+\setlength{\cfttabindent}{0pt}
+\setlength{\cftfigindent}{0pt}
+\renewcommand{\cftdotsep}{0}
+\renewcommand{\cftfigdotsep}{\cftdotsep}
+\renewcommand{\cfttabdotsep}{\cftdotsep}
+\renewcommand{\cftsecdotsep}{\cftdotsep}
+\renewcommand{\cftsubsecdotsep}{\cftdotsep}
+\renewcommand{\cfttabpresnum}{\tablename\ }
+\renewcommand{\cftfigpresnum}{\figurename\ }
+\setlength{\cfttabnumwidth}{2cm}
+\setlength{\cftfignumwidth}{2cm}
+\renewcommand{\cftchapdotsep}{\cftdotsep}
+\renewcommand{\cftchapleader}{\cftsecleader}
+\setlength{\cftsecindent}{0.75cm}
+\setlength{\cftsubsecindent}{1.75cm}
+\setlength{\cftchapnumwidth}{0.75cm}
+\setlength{\cftsecnumwidth}{1cm}
+\setlength{\cftsubsecnumwidth}{1.25cm}
+\renewcommand{\cftchapfont}{\mdseries}
+\renewcommand{\cftchappagefont}{\mdseries}
+\setlength{\cftbeforechapskip}{4pt}
+\setlength{\cftbeforesecskip}{2pt}
+%\setlength{\cftbeforesubsecskip}{-2pt}
+\setlength{\cftsubsubsecindent}{3cm}
+\setlength{\cftsubsubsecnumwidth}{1.75cm}
+%\setlength{\cftbeforesubsubsecskip}{-2pt}
+\cftsetrmarg{2.25ex}
+
+\setcounter{page}{-1}
+
+\renewcommand{\gEinfTitelseite}{
+\begin{titlepage}
+\thispagestyle{empty}
+   \begin{center}
+     \begin{minipage}[t][3.2cm][t]{10.6cm}
+         \centering
+         \fontsize{16pt}{16pt}\selectfont \textbf{Working Papers}
+     \end{minipage}\\
+     \textbf{\fontsize{12pt}{12pt}\selectfont ERCIS -- European Research Center for Information Systems}\\
+     Editors: J.\ Becker, K.\ Backhaus, H.\ L.\ Grob, T.\ Hoeren, S.\ Klein,\\
+     H.\ Kuchen, U.\ M\"{u}ller-Funk, U.\ W.\ Thonemann, G.\ Vossen
+   \end{center}
+
+   \vspace*{1.6cm}
+   Working Paper No.\ \Nummer
+   \begin{center}
+     \begin{minipage}[t][3.2cm][t]{10.6cm}
+         \centering
+         \textbf{\fontsize{16pt}{16pt}\selectfont \Thema}
+     \end{minipage}
+     \vspace*{2.5cm}
+     \begin{minipage}[t][0pt][t]{14cm}
+         \centering
+         \Autor
+     \end{minipage}
+   \end{center}
+   \vfill
+   ISSN 1614-7448
+   \vspace*{1cm}
+   \begin{center}
+      \begin{minipage}[t][0pt][t]{10.6cm}
+         \fontsize{8pt}{8pt}\selectfont cite as: \AutorCiteAs: \Thema. In: Working Papers, European Research Center for Information Systems No.\ \Nummer. Eds.: Becker, J.\ et al.\ M\"{u}nster \Jahr.
+      \end{minipage}
+      \vspace*{1.2cm}
+   \end{center}
+\end{titlepage}
+\normalsize
+\thispagestyle{empty}
+\cleardoublepage
+}
+\renewcommand{\eEinfTitelseite}{
+\begin{titlepage}
+\thispagestyle{empty}
+   \begin{center}
+     \begin{minipage}[t][3.2cm][t]{10.6cm}
+         \centering
+         \fontsize{16pt}{16pt}\selectfont \textbf{Working Papers}
+     \end{minipage}\\
+     \textbf{\fontsize{12pt}{12pt}\selectfont ERCIS -- European Research Center for Information Systems}\\
+     Editors: J.\ Becker, K.\ Backhaus, H.\ L.\ Grob, T.\ Hoeren, S.\ Klein,\\
+     H.\ Kuchen, U.\ M\"{u}ller-Funk, U.\ W.\ Thonemann, G.\ Vossen
+   \end{center}
+
+   \vspace*{1.6cm}
+   Working Paper No.\ \Nummer
+   \begin{center}
+     \begin{minipage}[t][3.2cm][t]{10.6cm}
+         \centering
+         \textbf{\fontsize{16pt}{16pt}\selectfont \Thema}
+     \end{minipage}
+     \vspace*{2.5cm}
+     \begin{minipage}[t][0pt][t]{14cm}
+         \centering
+         \Autor
+     \end{minipage}
+   \end{center}
+   \vfill
+   ISSN 1614-7448
+   \vspace*{1cm}
+   \begin{center}
+      \begin{minipage}[t][0pt][t]{10.6cm}
+         \fontsize{8pt}{8pt}\selectfont cite as: \AutorCiteAs: \Thema. In: Working Papers, European Research Center for Information Systems No.\ \Nummer. Eds.: Becker, J.\ et al.\ M\"{u}nster \Jahr.
+      \end{minipage}
+      \vspace*{1.2cm}
+   \end{center}
+\end{titlepage}
+\normalsize
+\thispagestyle{empty}
+\cleardoublepage
+}
+
+\renewcommand{\familydefault}{\sfdefault}

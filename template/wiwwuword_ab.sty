@@ -1,0 +1,200 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{wiwwuword_ab}[2008/04/10 Basis-Befehle fuer Stil der WI-Arbeitsberichte (von Stephan Dlugosz) Vers. 0.5.5]
+
+\RequirePackage{ifthen} % fuer die Fallunterscheidungen Article oder Report
+\RequirePackage{kvoptions} % fuer Paketoptionen
+
+\SetupKeyvalOptions{
+	family=wiwwuwordab,
+	prefix=wiwwuwordab@
+}
+
+\DeclareStringOption[german]{language}[german]
+\DeclareDefaultOption{%
+	\PackageWarning{wiwwuwordab}{Unbekannte Option: \CurrentOption}%
+}
+\ProcessKeyvalOptions{wiwwuwordab}
+
+%% echtes Ausfuehren
+\PassOptionsToPackage{language=\wiwwuwordab@language}{iswiwwu}
+\DisableKeyvalOption{wiwwuwordab}{language}
+%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{iswiwwu}
+
+\newcommand{\Nummer}{}
+\newcommand{\setNummer}[1]{\renewcommand{\Nummer}{#1}}
+\newcommand{\Jahr}{}
+\newcommand{\setJahr}[1]{\renewcommand{\Jahr}{#1}}
+
+\geometry{inner=2cm, bindingoffset=1cm, outer=2cm, top=2.7cm, bottom=2.5cm}
+\AfterPackage{wiwwubildertabellen}{
+	\renewcommand{\grafikcentering}{} % keine zentrierung
+	\renewcommand{\tabellecentering}{} % keine zentrierung
+	\renewcommand{\ltabellepos}{l} % keine zentrierung
+	\deffootnote{0.75cm}{0.75cm}{\textsuperscript{\normalfont\makebox[0.75cm][l]{\thefootnotemark}}} % Fussnotenstil
+}
+\setbibstyle{iswiwwu}
+
+\setheadsepline{0pt}
+\chead[\normalsize- \pagemark\ -]{\normalsize- \pagemark\ -}
+
+\renewcommand{\footnoterule}{\hrule width 5cm height 1pt \vspace{1ex}}
+
+\renewcommand{\contentsname}{Inhalt}
+
+\newcommand{\wiwwuwordab@tableofcontents}{}
+\let\wiwwuwordab@tableofcontents=\tableofcontents
+\renewcommand{\tableofcontents}{%
+	{\setlength{\baselineskip}{3ex plus0.5ex minus0.5ex}\wiwwuwordab@tableofcontents}%
+}
+
+% Kapitel-Ueberschriften
+\ifthenelse{\boolean{istartcl}}{
+	\titleformat{\section}%
+	  {\normalfont\large\bfseries}%
+	  {\makebox[0pt][l]{\thesection}}%
+	  {1.5cm}%
+	  {}%
+	\titlespacing{\section}{0pt}{16pt}{6pt}
+	\titleformat{\subsection}%
+	  {\normalfont\normalsize\bfseries}%
+	  {\makebox[0pt][l]{\thesubsection}}%
+	  {1.5cm}%
+	  {}%
+	\titlespacing{\subsection}{0pt}{16pt}{0pt}
+	\titleformat{\subsubsection}%
+	  {\normalfont\normalsize\bfseries}%
+	  {\makebox[0pt][l]{\thesubsubsection}}%
+	  {1.5cm}%
+	  {}%
+	\titlespacing{\subsubsection}{0pt}{16pt}{0pt}
+	\titleformat{\paragraph}%
+	  {\itshape\normalsize}%
+	  {}%
+	  {0cm}%
+	  {}%
+	\titlespacing{\paragraph}{0pt}{16pt}{0pt}
+}{%
+	\titleformat{\chapter}%
+	  {\normalfont\large\bfseries}%
+	  {\makebox[0pt][l]{\thechapter}}%
+	  {1.5cm}%
+	  {}%
+	\titlespacing{\chapter}{0pt}{-4ex}{6pt}
+	\titleformat{\section}%
+	  {\normalfont\normalsize\bfseries}%
+	  {\makebox[0pt][l]{\thesection}}%
+	  {1.5cm}%
+	  {}%
+	\titlespacing{\section}{0pt}{16pt}{0pt}
+	\titleformat{\subsection}%
+	  {\normalfont\normalsize\bfseries}%
+	  {\makebox[0pt][l]{\thesubsection}}%
+	  {1.5cm}%
+	  {}%
+	\titlespacing{\subsection}{0pt}{16pt}{0pt}
+	\titleformat{\subsubsection}%
+	  {\normalfont\normalsize\bfseries}%
+	  {\makebox[0pt][l]{\thesubsubsection}}%
+	  {1.5cm}%
+	  {}%
+	\titlespacing{\subsubsection}{0pt}{16pt}{0pt}
+	\titleformat{\paragraph}%
+	  {\normalfont\normalsize\bfseries}%
+	  {\makebox[0pt][l]{\theparagraph}}%
+	  {1.75cm}%
+	  {}%
+	\titlespacing{\paragraph}{0pt}{16pt}{0pt}
+	\titleformat{\subparagraph}%
+	  {\normalfont\normalsize\bfseries}%
+	  {\makebox[0pt][l]{\thesubparagraph}}%
+	  {2cm}%
+	  {}%
+	\titlespacing{\subparagraph}{0pt}{16pt}{0pt}
+}
+
+%% Abgeaendert aus der KOMA-Script Klasse scrbook
+\renewcommand\minisec[1]{\@afterindentfalse \vskip 1.5ex
+	{\parindent \z@
+	\raggedsection\normalfont\itshape\nobreak#1\par\nobreak}\nobreak
+	\@afterheading}
+
+\setlength{\bibhang}{1.5cm}
+\setlength{\bibsep}{0pt}
+
+\DeclareCaptionLabelSeparator{mylabelsep}{\hspace*{2.5cm}}
+\DeclareCaptionLabelFormat{mylabelformat}{\makebox[0pt][l]{#1~#2:}~}
+\captionsetup{labelformat={mylabelformat},labelfont={bf},labelsep=mylabelsep,format=hang,singlelinecheck=false}
+
+\setlength{\cfttabindent}{0pt}
+\setlength{\cftfigindent}{0pt}
+\renewcommand{\cfttabpresnum}{\tablename\ }
+\renewcommand{\cftfigpresnum}{\figurename\ }
+\setlength{\cfttabnumwidth}{2cm}
+\setlength{\cftfignumwidth}{2cm}
+
+\renewcommand{\cftchapleader}{\hfill}
+\renewcommand{\cftsecleader}{\hfill}
+\renewcommand{\cftsubsecleader}{\hfill}
+\renewcommand{\cftsubsubsecleader}{\hfill}
+\renewcommand{\cftparaleader}{\hfill}
+\setlength{\cftsecindent}{0.5cm}
+\setlength{\cftsubsecindent}{1.25cm}
+\setlength{\cftsubsubsecindent}{2.25cm}
+\setlength{\cftparaindent}{3.6cm}
+\setlength{\cftsubparaindent}{5.3cm}
+\setlength{\cftchapnumwidth}{0.5cm}
+\setlength{\cftsecnumwidth}{0.75cm}
+\setlength{\cftsubsecnumwidth}{1cm}
+\setlength{\cftsubsubsecnumwidth}{1.35cm}
+\setlength{\cftparanumwidth}{1.7cm}
+\setlength{\cftsubparanumwidth}{2.05cm}
+\renewcommand{\cftchapfont}{\mdseries}
+\renewcommand{\cftchappagefont}{\mdseries}
+\setlength{\cftbeforechapskip}{8pt}
+\setlength{\cftbeforesecskip}{4pt}
+\setlength{\cftbeforesubsecskip}{2pt}
+\setlength{\cftbeforesubsubsecskip}{2pt}
+\setlength{\cftbeforeparaskip}{2pt}
+\setlength{\cftbeforesubparaskip}{2pt}
+
+\cftsetrmarg{2.25ex}
+
+\renewcommand{\gEinfTitelseite}{
+\begin{titlepage}
+\thispagestyle{empty}
+\begin{center}\vspace*{-0.7cm}
+\textbf{Arbeitsberichte des Instituts f\"{u}r Wirtschaftsinformatik}\\
+Herausgeber: Prof.\,Dr.\ J.\ Becker, Prof.\,Dr.\ H.\ L.\ Grob, Prof.\,Dr.\ S.\ Klein,\\
+Prof.\,Dr.\ H.\ Kuchen, Prof.\,Dr.\ U.\ M\"{u}ller-Funk, Prof.\,Dr.\ G.\ Vossen
+\end{center}
+\vspace*{36pt}
+\hspace*{1.2cm}Arbeitsbericht Nr.\ \Nummer
+\vspace*{18pt}
+\begin{center}
+	\begin{minipage}[t][3.2cm][t]{10.6cm}
+ 		\centering
+    	\fontsize{16pt}{16pt}\selectfont \textbf{\Thema}
+ 	\end{minipage}\\[2ex]
+	\begin{minipage}[t][2cm][t]{12.98cm}
+         \centering
+         \Autor
+     \end{minipage}
+\end{center}
+\vfill
+\textbf{ISSN 1438-3985}
+\vspace*{2.2cm}
+\end{titlepage}
+\newpage
+\thispagestyle{empty}
+~
+\newpage
+\newpage
+\setcounter{page}{1}
+}
+\renewcommand{\eEinfTitelseite}{
+\begin{titlepage}
+	nicht definiert, bitte Stephan Dlugosz kontaktieren.
+\end{titlepage}
+}

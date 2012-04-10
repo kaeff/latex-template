@@ -1,0 +1,8 @@
+#! /bin/sh
+
+pandoc Inhalt.md.txt -o Inhalt.tex
+ruby script/replace.rb
+cd template/
+pdflatex Arbeit.tex
+pdflatex Arbeit.tex
+mv Arbeit.pdf ../

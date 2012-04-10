@@ -1,0 +1,179 @@
+%Version 23.10.2007
+
+% Copyright 2007 by Stephan Dlugosz <stephan.dlugosz@googlemail.com>
+
+\mode<presentation>
+
+
+% Mini frames
+
+%\defbeamertemplateparent{mini frames}{mini frame,mini frame in current subsection}
+%{}
+
+\defbeamertemplate*{mini frame}{ercis}
+{%
+  \begin{pgfpicture}{0pt}{0pt}{0.1cm}{0.1cm}
+    \pgfcircle[fillstroke]{\pgfpoint{0.05cm}{0.05cm}}{0.05cm}
+  \end{pgfpicture}%
+}
+[action]
+{
+  \setbeamersize{mini frame size=.14cm,mini frame offset=.03cm}
+}
+
+\defbeamertemplate*{mini frame in current subsection}{ercis}
+{%
+  \begin{pgfpicture}{0pt}{0pt}{0.1cm}{0.1cm}
+    \pgfcircle[stroke]{\pgfpoint{0.05cm}{0.05cm}}{0.05cm}
+  \end{pgfpicture}%
+}
+
+\defbeamertemplate*{mini frame in other subsection}{ercis}[1][50]
+{\color{fg!#1!bg}\usebeamertemplate{mini frame in current subsection}}
+
+
+
+
+% Navigation symbols
+
+\defbeamertemplate*{navigation symbols}{ercis}
+{%
+  \hbox{%
+    \hbox{\insertslidenavigationsymbol}
+    \hbox{\insertframenavigationsymbol}
+    \hbox{\insertsubsectionnavigationsymbol}
+    \hbox{\insertsectionnavigationsymbol}
+    \hbox{\insertdocnavigationsymbol}
+    \hbox{\insertbackfindforwardnavigationsymbol}%
+  }%
+}
+
+% No navigation symbols in handout or trans mode:
+\only<handout| trans>{\setbeamertemplate{navigation symbols}{}}
+
+
+
+% Section and subsections in head/foot
+
+\defbeamertemplate*{section in head/foot}{ercis}
+{\insertsectionhead}
+
+\defbeamertemplate*{section in head/foot shaded}{ercis}[1][50]
+{\color{fg!#1!bg}\usebeamertemplate{section in head/foot}}
+
+\defbeamertemplate*{subsection in head/foot}{ercis}
+{\insertsubsectionhead}
+
+\defbeamertemplate*{subsection in head/foot shaded}{ercis}[1][50]
+{\color{fg!#1!bg}\usebeamertemplate{subsection in head/foot}}
+
+
+
+
+
+% Headline and footline
+
+\defbeamertemplate*{headline}{ercis}
+{}
+
+\defbeamertemplate*{footline}{ercis}
+{%
+\hspace*{3.7em}\raisebox{0.28cm}{\makebox[0pt]{\insertframenumber}}\hspace*{1.4em}
+\raisebox{0.55cm}{\parbox{0.9\paperwidth}{\usebeamerfont{title in head/foot}\wiwwubeamer@footertitle\\[0.33cm]
+\usebeamerfont{author in head/foot}\wiwwubeamer@footer}}%\insertshortauthor}}
+\parbox[t][0pt][c]{0pt}{\hspace*{-0.95cm}\raisebox{1.35cm}{\resizebox{6.3mm}{!}\insertlogo}}%
+}
+
+\defbeamertemplate*{footline on title page}{ercis}
+{%
+\hspace*{0.485cm}
+\raisebox{-4.3cm}{\parbox{0.9\paperwidth}{\usebeamercolor[fg]{titlelike}\usebeamerfont{title in head/foot}\wiwwubeamer@footertitle\\[0.318cm]
+\usebeamerfont{author}\insertshortauthor}}
+\hspace*{3.9em}\raisebox{0.28cm}{\makebox[0pt]{}}
+}
+% background
+
+\defbeamertemplate*{background}{ercis}
+{}
+
+\defbeamertemplate*{background canvas}{ercis}
+{%
+  \ifbeamercolorempty[bg]{background canvas}{}{\color{bg}\vrule width\paperwidth height\paperheight}%
+}
+
+
+% Sidebar
+
+\defbeamertemplate*{sidebar left}{ercis}
+{}
+
+\defbeamertemplate*{sidebar right}{ercis}
+{
+  \vfill%
+  %\llap{\insertlogo\hskip0.1cm}%
+  %\vskip20pt% 2pt
+  \llap{\usebeamertemplate***{navigation symbols}\hskip0.1cm}%
+  \vskip7pt% 5pt
+}
+
+\defbeamertemplate*{sidebar canvas left}{ercis}
+{%
+  \ifbeamercolorempty[bg]{sidebar left}{}
+  {\color{bg}\vrule height\sidebarheight width\beamer@leftsidebar}%
+}
+
+\defbeamertemplate*{sidebar canvas right}{ercis}
+{%
+  \ifbeamercolorempty[bg]{sidebar right}{}
+  {\color{bg}\vrule height\sidebarheight width\beamer@rightsidebar}%
+}
+
+
+% Notes
+
+\defbeamertemplate*{note page}{ercis}
+{%
+  {%
+    \scriptsize
+    \insertvrule{.25\paperheight}{white!90!black}
+    \vskip-.25\paperheight
+    \nointerlineskip
+    \vbox{
+      \hfill\insertslideintonotes{0.25}\hskip-\Gm@rmargin\hskip0pt%
+      \vskip-0.25\paperheight%
+      \nointerlineskip
+      \begin{pgfpicture}{0cm}{0cm}{0cm}{0cm}
+        \begin{pgfrotateby}{\pgfdegree{90}}
+          \pgfputat{\pgfpoint{-2cm}{0.2cm}}%
+          {\pgfbox[base,left]{\footnotesize\the\year-\ifnum\month<10\relax0\fi\the\month-\ifnum\day<10\relax0\fi\the\day}}
+        \end{pgfrotateby}
+      \end{pgfpicture}}
+    \nointerlineskip
+    \vbox to .25\paperheight{\vskip0.5em
+      \hbox{\insertshorttitle[width=8cm]}%
+      \setbox\beamer@tempbox=\hbox{\insertsection}%
+      \hbox{\ifdim\wd\beamer@tempbox>1pt{\hskip4pt\raise3pt\hbox{\vrule
+            width0.4pt height7pt\vrule width 9pt
+            height0.4pt}}\hskip1pt\hbox{\begin{minipage}[t]{7.5cm}\def\breakhere{}\insertsection\end{minipage}}\fi%
+      }%
+      \setbox\beamer@tempbox=\hbox{\insertsubsection}%
+      \hbox{\ifdim\wd\beamer@tempbox>1pt{\hskip17.4pt\raise3pt\hbox{\vrule
+            width0.4pt height7pt\vrule width 9pt
+            height0.4pt}}\hskip1pt\hbox{\begin{minipage}[t]{7.5cm}\def\breakhere{}\insertsubsection\end{minipage}}\fi%
+      }%
+      \setbox\beamer@tempbox=\hbox{\insertshortframetitle}%
+      \hbox{\ifdim\wd\beamer@tempbox>1pt{\hskip30.8pt\raise3pt\hbox{\vrule
+            width0.4pt height7pt\vrule width 9pt
+            height0.4pt}}\hskip1pt\hbox{\insertshortframetitle[width=7cm]}\fi%
+      }%
+      \vfil}%
+  }%
+  \vskip.25em
+  \nointerlineskip
+  \insertnote
+}
+
+
+
+\mode
+<all>

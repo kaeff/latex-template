@@ -1,0 +1,315 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{wiwwumathe}[2009/01/30 Mathe-Befehle fuer alle Stile (von Stephan Dlugosz) Vers. 0.5.5]
+\RequirePackage{ifthen}
+\RequirePackage{scrlfile}
+\RequirePackage[UKenglish,ngerman]{babel}
+
+\newcommand{\wiwwumathe@Satz}{Satz}
+\newcommand{\wiwwumathe@Hilfssatz}{Hilfssatz}
+\newcommand{\wiwwumathe@Korollar}{Korollar}
+\newcommand{\wiwwumathe@Algorithmus}{Algorithmus}
+\newcommand{\wiwwumathe@Beispiel}{Beispiel}
+\newcommand{\wiwwumathe@Bemerkung}{Bemerkung}
+
+
+\addto\captionsUSenglish{%	
+	\renewcommand{\proofname}{\textbf{Proof}}
+	\renewcommand{\wiwwumathe@Satz}{Theorem}%
+	\renewcommand{\wiwwumathe@Hilfssatz}{Proposition}%
+	\renewcommand{\wiwwumathe@Korollar}{Korollary}%
+	\renewcommand{\wiwwumathe@Algorithmus}{Algorithm}%
+	\renewcommand{\wiwwumathe@Beispiel}{Example}%
+	\renewcommand{\wiwwumathe@Bemerkung}{Comment}%
+}%
+\addto\captionsenglish{%	
+	\renewcommand{\proofname}{\textbf{Proof}}
+	\renewcommand{\wiwwumathe@Satz}{Theorem}%
+	\renewcommand{\wiwwumathe@Hilfssatz}{Proposition}%
+	\renewcommand{\wiwwumathe@Korollar}{Corollary}%
+	\renewcommand{\wiwwumathe@Algorithmus}{Algorithm}%
+	\renewcommand{\wiwwumathe@Beispiel}{Example}%
+	\renewcommand{\wiwwumathe@Bemerkung}{Comment}%
+}%
+\addto\captionsUKenglish{%	
+	\renewcommand{\proofname}{\textbf{Proof}}
+	\renewcommand{\wiwwumathe@Satz}{Theorem}%
+	\renewcommand{\wiwwumathe@Hilfssatz}{Proposition}%
+	\renewcommand{\wiwwumathe@Korollar}{Corollary}%
+	\renewcommand{\wiwwumathe@Algorithmus}{Algorithm}%
+	\renewcommand{\wiwwumathe@Beispiel}{Example}%
+	\renewcommand{\wiwwumathe@Bemerkung}{Comment}%
+}%
+\addto\captionsngerman{%	
+	\renewcommand{\proofname}{\bf Beweis}
+}%
+
+
+\newboolean{wiwwumathe@mathebeamer}
+\setboolean{wiwwumathe@mathebeamer}{false}
+\newboolean{wiwwumathe@report}
+\setboolean{wiwwumathe@report}{false}
+\newboolean{wiwwumathe@nomathfonts}
+\setboolean{wiwwumathe@nomathfonts}{false}
+
+\AfterClass*{beamer}{%
+	\setboolean{wiwwumathe@mathebeamer}{true}
+	\PackageInfo{wiwwumathe}{Klasse beamer geladen}
+	\RequirePackage{bbm}
+}
+\AfterClass*{scrreprt}{%
+	\setboolean{wiwwumathe@report}{true}
+	\PackageInfo{wiwwumathe}{Klasse scrreprt geladen}
+}
+\AfterClass*{report}{%
+	\setboolean{wiwwumathe@report}{true}
+	\PackageInfo{wiwwumathe}{Klasse report geladen}
+}
+\AfterPackage*{mathpazo}{%
+	\setboolean{wiwwumathe@nomathfonts}{true}
+	\PackageInfo{wiwwumathe}{Schrift mathpazo geladen -> keine AMS-Fonts/-Symbole laden!}
+}
+\AfterPackage*{mathdesign}{%
+	\setboolean{wiwwumathe@nomathfonts}{true}
+	\PackageInfo{wiwwumathe}{Schrift mathdesign geladen -> keine AMS-Fonts/-Symbole laden!}
+}
+
+\ifthenelse{\boolean{wiwwumathe@nomathfonts}}{}{%
+	\RequirePackage{amsfonts,latexsym,amssymb} %fonts und symbole
+	\RequirePackage{mathrsfs} % fuer "andere" Schreibschrift
+}
+\RequirePackage{amsmath} % Es wird das AMS-Paket verwendet
+\RequirePackage{amsthm,amscd} % AMS-Pakete fuer Theoreme
+\RequirePackage{eucal} % schoenere mathcal-Buchstaben
+\RequirePackage{exscale} % bessere Skalierung der Formelsymbole fuer Summe etc.
+\RequirePackage{dsfont} % Blackboard -Schriftart fuer Indikatorfunktion
+\RequirePackage{icomma} %verringert den Abstand zwischen Komma und nachfolgendem Zeichen
+\RequirePackage{bm}%fette (griechische) Symbole
+
+
+\newcommand{\1}{\mathds{1}}
+\newcommand{\Indikator}[2]{\1_{#1}\left(#2\right)}
+
+
+%Doppelpunkt in := im Mathemodus hoeher setzen!!
+\mathchardef\ordinarycolon\mathcode`\:
+\mathcode`\:=\string"8000
+\begingroup \catcode`\:=\active
+  \gdef:{\mathrel{\mathop\ordinarycolon}}
+\endgroup
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%% Durch \usepackage{amsthm,amscd,amssymb} werden Umgebungen %%%%%%%%%%%%%
+%%%%%%%%% fuer Saetze, Theoreme, Lemmata etc. zur Verfuegung           %%%%%%%%%%%%%
+%%%%%%%%% gestellt. Die Darstellung wird im folgenden eingestellt.  %%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newtheoremstyle{withproof}% name
+  {1em}%      Space above, empty = `usual value'
+  {}%      Space below
+  {\itshape}% Body font
+  {}%         Indent amount (empty = no indent, \parindent = para indent)
+  {\bfseries}% thm head font
+  {}%        Punctuation after thm head
+  {\newline}% Space after thm head: \newline = linebreak
+  {}%         thm head spec
+
+\newtheoremstyle{break}% name
+  {1em}%      Space above, empty = `usual value'
+  {1em}%      Space below
+  {\itshape}% Body font
+  {}%         Indent amount (empty = no indent, \parindent = para indent)
+  {\bfseries}% thm head font
+  {}%        Punctuation after thm head
+  {\newline}% Space after thm head: \newline = linebreak
+  {}%         thm head spec
+
+\newtheoremstyle{beispiel}% name
+  {1em}%      Space above, empty = `usual value'
+  {1em}%      Space below
+  {\small}%   Body font
+  {}%         Indent amount (empty = no indent, \parindent = para indent)
+  {\bfseries}% thm head font
+  {}%        Punctuation after thm head
+  {\newline}% Space after thm head: \newline = linebreak
+  {}%         thm head spec
+
+\theoremstyle{break}
+\ifthenelse{\boolean{wiwwumathe@report}}{%
+	\newtheorem{defi}{Definition}[chapter]
+}{%
+	\newtheorem{defi}{Definition}%[section]
+}
+\newtheorem{bem}[defi]{\wiwwumathe@Bemerkung}
+\ifthenelse{\boolean{wiwwumathe@report}}{%
+	\newtheorem{algorithmus}{\wiwwumathe@Algorithmus}[chapter]
+}{%
+	\newtheorem{algorithmus}{\wiwwumathe@Algorithmus}
+}
+\theoremstyle{beispiel}
+\newtheorem{beisp}[defi]{\wiwwumathe@Beispiel}
+
+\theoremstyle{withproof}
+\newtheorem{satz}[defi]{\wiwwumathe@Satz}
+\newtheorem{hilf}[defi]{\wiwwumathe@Hilfssatz}
+\ifthenelse{\boolean{wiwwumathe@mathebeamer}}{}{\newtheorem{lemma}[defi]{Lemma}}
+\newtheorem{korollar}[defi]{\wiwwumathe@Korollar}
+\ifthenelse{\boolean{wiwwumathe@mathebeamer}}{}{\newtheorem{theorem}[defi]{\wiwwumathe@Satz}}
+
+% Fuer bessere abstaende zwischen Satz und Beweis
+\renewenvironment{proof}[1][\upshape\proofname]{\par
+  \pushQED{\qed}%
+  \normalfont \topsep0pt \partopsep0pt
+  \trivlist 
+  \item[\hskip\labelsep
+        \itshape
+    #1\@addpunct{.}]\ignorespaces
+}{%
+  \popQED\endtrivlist\@endpefalse\vspace{1em}
+}
+
+% Skript-Schrift Zeichen
+\newcommand{\cA}{\ensuremath{\mathcal{A}}}
+\newcommand{\cB}{\ensuremath{\mathcal{B}}}
+\newcommand{\cC}{\ensuremath{\mathcal{C}}}
+\newcommand{\cD}{\ensuremath{\mathcal{D}}}
+\newcommand{\cE}{\ensuremath{\mathcal{E}}}
+\newcommand{\cF}{\ensuremath{\mathcal{F}}}
+\newcommand{\cG}{\ensuremath{\mathcal{G}}}
+\newcommand{\cH}{\ensuremath{\mathcal{H}}}
+\newcommand{\cI}{\ensuremath{\mathcal{I}}}
+\newcommand{\cJ}{\ensuremath{\mathcal{J}}}
+\newcommand{\cK}{\ensuremath{\mathcal{K}}}
+\newcommand{\cL}{\ensuremath{\mathcal{L}}}
+\newcommand{\cN}{\ensuremath{\mathcal{N}}}
+\newcommand{\cM}{\ensuremath{\mathcal{M}}}
+\newcommand{\cO}{\ensuremath{\mathcal{O}}}
+\newcommand{\cP}{\ensuremath{\mathcal{P}}}
+\newcommand{\cQ}{\ensuremath{\mathcal{Q}}}
+\newcommand{\cR}{\ensuremath{\mathcal{R}}}
+\newcommand{\cS}{\ensuremath{\mathcal{S}}}
+\newcommand{\cT}{\ensuremath{\mathcal{T}}}
+\newcommand{\cU}{\ensuremath{\mathcal{U}}}
+\newcommand{\cV}{\ensuremath{\mathcal{V}}}
+\newcommand{\cW}{\ensuremath{\mathcal{W}}}
+\newcommand{\cX}{\ensuremath{\mathcal{X}}}
+\newcommand{\cY}{\ensuremath{\mathcal{Y}}}
+\newcommand{\cZ}{\ensuremath{\mathcal{Z}}}
+
+%kurze Befehle fuer Zahlensysteme und Mengen
+\newcommand{\IA}{\ensuremath{\mathds{A}}}
+\newcommand{\IB}{\ensuremath{\mathds{B}}}
+\newcommand{\IC}{\ensuremath{\mathds{C}}}
+\newcommand{\ID}{\ensuremath{\mathds{D}}}
+\newcommand{\IE}{\ensuremath{\mathds{E}}} % und fuer den Erwartungswert
+\newcommand{\IF}{\ensuremath{\mathds{F}}}
+\newcommand{\IG}{\ensuremath{\mathds{G}}}
+\newcommand{\IH}{\ensuremath{\mathds{H}}}
+\newcommand{\II}{\ensuremath{\mathds{I}}}
+%\newcommand{\IJ}{\ensuremath{\mathds{J}}}
+\newcommand{\IK}{\ensuremath{\mathds{K}}}
+\newcommand{\IL}{\ensuremath{\mathds{L}}}
+\newcommand{\IM}{\ensuremath{\mathds{M}}}
+\newcommand{\IN}{\ensuremath{\mathds{N}}}
+\newcommand{\IO}{\ensuremath{\mathds{O}}}
+\newcommand{\IP}{\ensuremath{\mathds{P}}}
+\newcommand{\IQ}{\ensuremath{\mathds{Q}}}
+\newcommand{\IR}{\ensuremath{\mathds{R}}}
+\newcommand{\IS}{\ensuremath{\mathds{S}}}
+\newcommand{\IT}{\ensuremath{\mathds{T}}}
+\newcommand{\IU}{\ensuremath{\mathds{U}}}
+\newcommand{\IV}{\ensuremath{\mathds{V}}}
+\newcommand{\IW}{\ensuremath{\mathds{W}}}
+\newcommand{\IX}{\ensuremath{\mathds{X}}}
+\newcommand{\IY}{\ensuremath{\mathds{Y}}}
+\newcommand{\IZ}{\ensuremath{\mathds{Z}}}
+
+\ifthenelse{\boolean{wiwwumathe@mathebeamer}}{%
+	\let\mathds=\mathbbmss
+}{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% nur aus Kompatibilitaet
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%kurze Befehle fuer Zahlensysteme und Mengen
+\newcommand{\A}{\ensuremath{\mathds{A}}}
+\newcommand{\B}{\ensuremath{\mathds{B}}}
+\newcommand{\C}{\ensuremath{\mathds{C}}}
+\newcommand{\D}{\ensuremath{\mathds{D}}}
+\newcommand{\E}{\ensuremath{\mathds{E}}}
+\newcommand{\F}{\ensuremath{\mathds{F}}}
+\newcommand{\G}{\ensuremath{\mathds{G}}}
+%\newcommand{\H}{\ensuremath{\mathds{H}}}
+\newcommand{\I}{\ensuremath{\mathds{I}}}
+%\newcommand{\J}{\ensuremath{\mathds{J}}} niederlaendisches IJ 
+\newcommand{\K}{\ensuremath{\mathds{K}}}
+%\newcommand{\L}{\ensuremath{\mathds{L}}}
+\newcommand{\M}{\ensuremath{\mathds{M}}}
+\newcommand{\N}{\ensuremath{\mathds{N}}}
+%\newcommand{\O}{\ensuremath{\mathds{O}}}
+%\newcommand{\P}{\ensuremath{\mathds{P}}}
+\newcommand{\Q}{\ensuremath{\mathds{Q}}}
+\newcommand{\R}{\ensuremath{\mathds{R}}}
+%\newcommand{\S}{\ensuremath{\mathds{S}}}
+\newcommand{\T}{\ensuremath{\mathds{T}}}
+\newcommand{\U}{\ensuremath{\mathds{U}}}
+\newcommand{\V}{\ensuremath{\mathds{V}}}
+\newcommand{\W}{\ensuremath{\mathds{W}}}
+\newcommand{\X}{\ensuremath{\mathds{X}}}
+\newcommand{\Y}{\ensuremath{\mathds{Y}}}
+\newcommand{\Z}{\ensuremath{\mathds{Z}}}
+
+\ifthenelse{\boolean{wiwwumathe@mathebeamer}}{%
+	\let\mathds=\mathbbmss
+}{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%frakturzeichen
+\newcommand{\fA}{\ensuremath{\mathfrak{A}}}
+\newcommand{\fB}{\ensuremath{\mathfrak{B}}}
+\newcommand{\fC}{\ensuremath{\mathfrak{C}}}
+\newcommand{\fD}{\ensuremath{\mathfrak{D}}}
+\newcommand{\fE}{\ensuremath{\mathfrak{E}}}
+\newcommand{\fF}{\ensuremath{\mathfrak{F}}}
+\newcommand{\fG}{\ensuremath{\mathfrak{G}}}
+\newcommand{\fH}{\ensuremath{\mathfrak{H}}}
+\newcommand{\fI}{\ensuremath{\mathfrak{I}}}
+\newcommand{\fJ}{\ensuremath{\mathfrak{J}}}
+\newcommand{\fK}{\ensuremath{\mathfrak{K}}}
+\newcommand{\fL}{\ensuremath{\mathfrak{L}}}
+\newcommand{\fM}{\ensuremath{\mathfrak{M}}}
+\newcommand{\fN}{\ensuremath{\mathfrak{N}}}
+\newcommand{\fO}{\ensuremath{\mathfrak{O}}}
+\newcommand{\fP}{\ensuremath{\mathfrak{P}}}
+\newcommand{\fQ}{\ensuremath{\mathfrak{Q}}}
+\newcommand{\fR}{\ensuremath{\mathfrak{R}}}
+\newcommand{\fS}{\ensuremath{\mathfrak{S}}}
+\newcommand{\fT}{\ensuremath{\mathfrak{T}}}
+\newcommand{\fU}{\ensuremath{\mathfrak{U}}}
+\newcommand{\fV}{\ensuremath{\mathfrak{V}}}
+\newcommand{\fW}{\ensuremath{\mathfrak{W}}}
+\newcommand{\fX}{\ensuremath{\mathfrak{X}}}
+\newcommand{\fY}{\ensuremath{\mathfrak{Y}}}
+\newcommand{\fZ}{\ensuremath{\mathfrak{Z}}}
+
+\DeclareMathOperator{\Med}{Med}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator{\const}{const}
+
+%%%% fuer lange Pfeile in beide Richtungen %%%%%
+\newcommand{\xleftrightarrows}[2][]{\mathrel{%
+ \raise.40ex\hbox{$\ext@arrow 3095\leftarrowfill@{\phantom{#1}}{#2}$}%
+ \setbox0=\hbox{$\ext@arrow 0359\rightarrowfill@{#1}{\phantom{#2}}$}%
+ \kern-\wd0 \lower.40ex\box0}}
+\newcommand{\xrightleftarrows}[2][]{\mathrel{%
+ \raise.40ex\hbox{$\ext@arrow 3095\rightarrowfill@{\phantom{#1}}{#2}$}%
+ \setbox0=\hbox{$\ext@arrow 0359\leftarrowfill@{#1}{\phantom{#2}}$}%
+ \kern-\wd0 \lower.40ex\box0}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% fuer Beschriftungstext unter Formelbestandteilen
+\newcommand{\beschriftung}[3][1]{%
+	\underset{\text{\normalsize\parbox[b][#1em][t]{0pt}{}#2}}{\smash[b]{#3}}
+}

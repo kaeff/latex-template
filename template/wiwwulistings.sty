@@ -1,0 +1,130 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{wiwwulistings}[2008/02/21 Listings-Befehle fuer alle Stile (von Stephan Dlugosz) Vers. 0.5.5]
+
+\RequirePackage{listings}[2007/02/22] %fuer Programmcode
+\RequirePackage{xcolor}
+\RequirePackage{scrlfile} % fuer Pruefung auf geladene Klassen und Pakete
+\RequirePackage[UKenglish,ngerman]{babel}
+
+%% Diese Farben werden fuer den Quelltext verwendet
+\definecolor{colKeys}{rgb}{0,0,0.5}
+\definecolor{colIdentifier}{rgb}{0,0,0}
+\definecolor{colComments}{rgb}{0.5,0.5,0.5}
+\definecolor{colString}{rgb}{0.5,0,0}
+
+\lstset{%
+	language=Java,%
+    basicstyle=\ttfamily, %
+    identifierstyle=\color{colIdentifier}, %
+    keywordstyle=\color{colKeys}, %
+    stringstyle=\color{colString}, %
+    commentstyle=\color{colComments}, %
+    columns=fixed, %
+    tabsize=2, %
+    extendedchars=true, %
+    showspaces=false, %
+    showstringspaces=false, %
+    breaklines=false, %
+    backgroundcolor=, %
+    breakautoindent=true, %
+    captionpos=b,
+    floatplacement=ht%
+}
+
+\definecolor{black}{rgb}{0,0,0}
+\lstnewenvironment{SQL}{%
+	\lstset{language=SQL,tabsize=8,stringstyle=\color{black},keywordstyle=\color{black}}%
+}{}
+\lstnewenvironment{BASIC}[1][]{%
+	\lstset{language=VBScript,stringstyle=\color{black},#1}%
+}{}
+\lstnewenvironment{Java}[1][]{%
+	\lstset{#1}
+}{}
+
+\lstnewenvironment{XML}[1][]{%
+	\lstset{language=XML,#1}%
+}{}
+
+\addto\captionsngerman{%
+ 	\renewcommand{\lstlistlistingname}{Programme}%
+ 	\renewcommand{\lstlistingname}{Prog.}%
+}
+\addto\captionsUKenglish{%
+	\renewcommand{\lstlistlistingname}{Listings}%
+ 	\renewcommand{\lstlistingname}{List.}%
+}
+\addto\captionsUSenglish{%
+	\renewcommand{\lstlistlistingname}{Listings}%
+ 	\renewcommand{\lstlistingname}{List.}%
+}
+\addto\captionsenglish{%
+	\renewcommand{\lstlistlistingname}{Listings}%
+ 	\renewcommand{\lstlistingname}{List.}%
+}
+
+\newcommand{\lsttotoc}{}
+
+\AfterClass*{scrartcl}{%
+    \AtBeginDocument{
+	    %\renewcommand{\thelstlisting}{\thesection.\arabic{lstlisting}}
+		%\@addtoreset{lstlisting}{section}
+		%\renewcommand{\thelstlisting}{\thesection.\arabic{lstlisting}}		
+	}
+}
+\AfterClass*{scrreprt}{%
+	\AtBeginDocument{
+		\renewcommand{\thelstlisting}{\thechapter.\arabic{lstlisting}}
+		\@addtoreset{lstlisting}{chapter}
+		%\g@addto@macro\AnhChapter{\setcounter{lstlisting}{0}}
+	}
+}
+
+
+\AfterPackage*{tocloft}{
+	% fuer die Kompatibilitaet mit tocloft
+	\newcommand{\cftlstpresnum}{\lstlistingname}
+	\newcommand{\cftlstaftersnum}{\cftfigaftersnum}
+	\newcommand{\cftlstaftersnumb}{\cftfigaftersnumb}
+	\newcommand{\cftbeforelstskip}{\cftbeforefigskip}
+	\newcommand{\cftlstindent}{\cftfigindent}
+	\newcommand{\cftlstnumwidth}{\cftfignumwidth}
+	\newcommand{\cftlstfont}{\cftfigfont}
+	\renewcommand*{\l@lstlisting}[2]{%
+	  \ifnum \c@lofdepth >\z@
+	    \vskip \cftbeforelstskip
+	    {\leftskip \cftlstindent\relax
+	     \rightskip \@tocrmarg
+	     \parfillskip -\rightskip
+	     \parindent \cftlstindent\relax\@afterindenttrue
+	     \interlinepenalty\@M
+	     \leavevmode
+	     \@tempdima \cftlstnumwidth\relax
+	     \let\@cftbsnum \cftlstpresnum
+	     \let\@cftasnum \cftlstaftersnum
+	     \let\@cftasnumb \cftlstaftersnumb
+	     \advance\leftskip \@tempdima \null\nobreak\hskip -\leftskip
+	     {\cftlstfont #1}\nobreak
+	     \cftfigfillnum{#2}}
+	   \fi
+  	}
+}
+
+%% Korrektur fuer listings Version 1.3
+% \renewcommand*{\lstlistoflistings}{%
+%   \begingroup
+%     \if@twocolumn
+%       \@restonecoltrue\onecolumn
+%     \else
+%       \@restonecolfalse
+%     \fi
+%     \lol@heading
+%     \setlength{\parskip}{\z@}%
+%     \setlength{\parindent}{\z@}%
+%     \setlength{\parfillskip}{\z@ \@plus 1fil}%
+%     \@starttoc{lol}%
+%     \if@restonecol\twocolumn\fi
+%   \endgroup
+%   
+% }
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

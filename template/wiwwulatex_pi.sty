@@ -1,0 +1,82 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{wiwwulatex_pi}[2007/03/03 Basis-Befehle fuer LaTeX Stil PI (von Stephan Dlugosz) Vers. 0.5.5]
+
+\RequirePackage{lmodern} % Fuer umlautcodierung im pdf (zum rauskopieren) (Achtung, etwas andere Schrift)
+
+\oddsidemargin 1cm
+\evensidemargin 1cm
+\textwidth 15cm
+\topmargin -1.25cm
+\textheight 24.37cm
+
+\defpagestyle{Titel}{%
+ {}
+ {}
+ {\hfill \large Westf\"{a}lische Wilhelms-Universit\"{a}t M\"{u}nster \hfill}
+ (\textwidth, 1pt)%
+}{%
+ {}
+ {}
+ {}
+ (\textwidth, 0.1pt)%
+}
+
+\renewcommand{\gEinfTitelseite}{%
+\thispagestyle{Titel}
+  \null\vfil
+%%  \begin{center}\includegraphics[height=2cm]{schloss.pdf}\end{center}
+%%  \vskip 20pt
+%% anstelle der folgenden Zeile, um das Schloss mit einzufuegen:
+  \vskip 7.5cm
+  \begin{center}%
+    {\large \textbf{\Typ} \par}
+    \vskip 1cm
+    {\textbf{\Large \Thema} \par}
+    \vskip 1cm
+    {\large  \Zusatz \par}
+    \vskip 1.5cm
+    {\Large \Autor \par}
+  \end{center}
+  \vspace*{\stretch{1}}
+    Themensteller: \Themensteller \\
+    Betreuer: \Betreuer \\
+    Institut f\"{u}r Wirtschaftsinformatik \\
+    \Lehrstuhl \\
+  \vfil\null
+}
+\renewcommand{\gAbschlErklaerung}[1]{
+  \newpage
+  \thispagestyle{empty}
+  \vspace*{\stretch{1}}
+  \begin{center}
+    \fbox{\begin{minipage}{\textwidth}
+      Ich versichere hiermit, dass ich meine \Typ\ \glqq\emph{\PDFThema}\grqq\ selb\-st\"{a}n\-dig
+      und ohne fremde Hilfe angefertigt habe, und dass ich alle von anderen Autoren
+      w\"{o}rt\-lich \"{u}ber\-nom\-men\-en Stellen wie auch die sich an die Ge\-dan\-ken\-g\"{a}n\-ge anderer
+      Autoren eng anlehnenden Ausf\"{u}hrungen meiner Arbeit besonders gekennzeichnet und
+      die Quellen zitiert habe. \\ \par
+      \vskip 1cm
+      \begin{tabular}{ll}
+        \noindent M\"{u}nster, den #1 \hspace{2cm} {} & \rule{70mm}{.1pt} \\
+        {} & \Autor  \\
+      \end{tabular}
+    \end{minipage}}
+  \end{center}
+}
+\renewcommand{\eAbschlErklaerung}[1]{
+  \newpage
+  \thispagestyle{empty}
+  \vspace*{\stretch{1}}
+  \begin{center}
+    \fbox{\begin{minipage}{\textwidth}
+      I hereby declare that, to the best of my knowledge and belief, this \Typ\ titled ``\emph{\PDFThema}'' 
+      is my own work. I confirm that each significant contribution to, and quotation in this thesis from the work,
+      or works of other people is indicated through the proper use of citations and references.\\ \par
+      \vskip 1cm
+      \begin{tabular}{ll}
+        \noindent M\"{u}nster, on the #1 \hspace{2cm} {} & \rule{70mm}{.1pt} \\
+        {} & \Autor  \\
+      \end{tabular}
+    \end{minipage}}
+  \end{center}
+}

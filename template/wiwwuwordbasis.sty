@@ -1,0 +1,124 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{wiwwuwordbasis}[2009/03/02 Basis-Befehle fuer alle Word-artigen Stile (von Stephan Dlugosz) Vers. 0.5.5]
+
+\DeclareOption{nobottomtitles}{
+	\PassOptionsToPackage{nobottomtitles*}{titlesec}
+}
+\DeclareVoidOption{noinputenc}{%
+  \PassOptionsToClass{noinputenc}{wiwwubasis}
+}
+\DeclareOption*{%
+	\PackageWarning{wiwwuwordbasis}{Unknown Option: \CurrentOption}
+}
+\ProcessOptions
+
+%% zus. Pakete
+\RequirePackage[a4paper]{geometry}[2002/07/08]
+\RequirePackage{mathptmx,courier} % Korrekte Schriftarten
+\RequirePackage[scaled=.90]{helvet}% korrekte Schriftart
+\RequirePackage{titlesec} % fuer das korrekte Layout der Ueberschriften!
+\RequirePackage[titles]{tocloft} % fuer Korrekte Abbildungs- und Tabellenverzeichnisse
+\RequirePackage{ifthen}
+
+\pagestyle{scrheadings} % Einstellung Kopfzeilen
+\clearscrheadfoot
+
+\renewenvironment{itemize}{%
+	\list{\textbullet\hfill}{
+		\setlength{\leftmargin}{0.7cm}
+		\setlength{\labelsep}{0cm}
+		\setlength{\labelwidth}{0.7cm}
+	}
+}{
+	\endlist
+}
+
+\renewenvironment{enumerate}[1][\arabic{enumi}.]{
+	\list{#1\hfill}{
+		\usecounter{enumi}
+		\setlength{\leftmargin}{0.7cm}
+		\setlength{\labelsep}{0cm}
+		\setlength{\labelwidth}{0.7cm}
+	}
+}{
+	\endlist
+}
+
+
+\ifthenelse{\boolean{istartcl}}{%
+    \renewcommand{\thefigure}{\thesection.\arabic{figure}}
+    \@addtoreset{figure}{section}
+    \renewcommand{\thetable}{\thesection.\arabic{table}}
+	\@addtoreset{table}{section}
+    \renewcommand{\AnhSubSection}[1]{%
+		\refstepcounter{subsection}
+		\subsubsection*{\makebox[0pt][l]{\thesubsection}\hspace*{1.5cm}#1}
+		\addcontentsline{toc}{subsubsection}{\protect\numberline{\thesubsection}{#1}}
+	}
+}{%
+	\renewcommand{\AnhChapter}[1]{%
+		\refstepcounter{chapter}
+		\section*{\makebox[0pt][l]{\thechapter}\hspace*{1.5cm}#1}
+		\addcontentsline{toc}{section}{\protect\numberline{\thechapter}{#1}}
+	}
+}
+\renewcommand{\AnhSection}[1]{%
+	\refstepcounter{section}
+	\subsection*{\makebox[0pt][l]{\thesection}\hspace*{1.5cm}#1}
+	\addcontentsline{toc}{subsection}{\protect\numberline{\thesection}{#1}}
+}
+
+\newcommand{\wiwwuwordbasis@myappendixwiwwuwordrprt}{}
+\let\wiwwuwordbasis@myappendixwiwwuwordrprt=\appendix
+\renewcommand{\appendix}{%
+	\wiwwuwordbasis@myappendixwiwwuwordrprt
+	\ifthenelse{\boolean{istartcl}}{%
+		\section*{\appendixname}\phantomsection
+		\addcontentsline{toc}{section}{\appendixname}
+	}{%
+		\chapter*{\appendixname}\phantomsection
+		\addcontentsline{toc}{chapter}{\appendixname}
+	}
+}
+
+%%Fuer durchgehende Punkte in den Verzeichnissen!!
+\ifthenelse{\boolean{istartcl}}{}{%
+	\renewcommand{\cftchapfillnum}[1]{%
+		{\cftchapleader}\nobreak
+		{\cftchappagefont #1}\par%
+	}
+}
+\renewcommand{\cftsecfillnum}[1]{%
+	{\cftsecleader}\nobreak
+	{\cftsecpagefont #1}\par%
+}
+\renewcommand{\cftsubsecfillnum}[1]{%
+	{\cftsubsecleader}\nobreak
+	{\cftsubsecpagefont #1}\par%
+}
+\renewcommand{\cftsubsubsecfillnum}[1]{%
+	{\cftsubsubsecleader}\nobreak
+	{\cftsubsubsecpagefont #1}\par%
+}
+\renewcommand{\cftparafillnum}[1]{%
+	{\cftparaleader}\nobreak
+	{\cftparapagefont #1}\par%
+}
+\renewcommand{\cftsubparafillnum}[1]{%
+	{\cftsubparaleader}\nobreak
+	{\cftsubparapagefont #1}\par%
+}
+\ifthenelse{\boolean{istartcl}}{%
+	\renewcommand{\cftparafillnum}[1]{%
+		{\cftparaleader}\nobreak
+		{\cftparapagefont #1}\par%
+	}
+}{}
+\renewcommand{\cfttabfillnum}[1]{%
+	{\cfttableader}\nobreak
+	{\cfttabpagefont #1}\par%
+}
+\renewcommand{\cftfigfillnum}[1]{%
+	{\cftfigleader}\nobreak
+	{\cftfigpagefont #1}\par%
+}

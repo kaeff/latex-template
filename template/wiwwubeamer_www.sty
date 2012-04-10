@@ -1,0 +1,47 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesClass{wiwwubeamer_www}[2007/09/31 Beamer-Class (von Stephan Dlugosz) Vers. 0.5.4]
+
+%\RequirePackage{ifthen}
+\RequirePackage{scrlfile}
+
+\DeclareOption{secbar}{%
+	\AtBeginDocument{%
+		\setbeamertemplate{headline}{%
+			  \parbox[t][0pt]{\linewidth}{\hspace*{8mm}%
+				\raisebox{-1.05cm}{%
+					\begin{beamercolorbox}[dp=0.65mm,ht=2.2mm,sep=0pt,colsep=0pt,leftskip=0pt,rightskip=0pt]{mini frame}%
+                    	\hspace*{-1.15mm}%
+                    	\insertsectionnavigationhorizontal{0pt}{}{\hspace*{-2.775mm}\color{beamer@blendedblue}\rule[-0.65mm]{\textwidth}{2.77mm}}%
+                    \end{beamercolorbox}%
+				}%
+			}%
+		}%
+	}
+}
+\DeclareOption{subsecbar}{%
+	\AtBeginDocument{%
+		\setbeamertemplate{headline}{%
+			\parbox[t][0pt]{\linewidth}{\hspace*{8mm}%
+				\raisebox{-1.05cm}{%
+					\begin{beamercolorbox}[dp=0.65mm,ht=2.1mm,sep=0pt,colsep=0pt,leftskip=0pt,rightskip=0pt]{mini frame}%
+                    	\hspace*{-1.2mm}%
+                    	\insertsectionnavigationhorizontal{0pt}{}{\hspace*{-2.775mm}\color{beamer@blendedblue}\rule[-0.65mm]{\textwidth}{2.75mm}}%
+                    \end{beamercolorbox}%
+				}%
+			}%
+		}
+	}
+}
+\DeclareOption*{%
+  \PackageWarning{wiwwubeamer_www}{Unknown Option: \CurrentOption}%
+}
+\ProcessOptions*
+
+%\AtBeginDocument{%
+%    \setbeamertemplate{background canvas}{\includegraphics[height=\paperheight]{www_hg}}%
+%}
+\AfterClass*{beamer}{%	
+  	\usetheme{wwwwiwwu}
+  	\pgfdeclareimage[height=\paperheight]{hgn}{www_hg}%
+  	\pgfdeclareimage[height=\paperheight]{hg}{www_hg}
+}

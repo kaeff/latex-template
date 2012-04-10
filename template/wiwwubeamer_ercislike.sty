@@ -1,0 +1,56 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesClass{wiwwubeamer_ercislike}[2007/09/18 Beamer-Class (von Stephan Dlugosz) Vers. 0.5.4]
+
+\RequirePackage{ifthen}
+\RequirePackage{scrlfile}
+
+\newboolean{wiwwubeamer_ercislike@ercisfrei}
+\setboolean{wiwwubeamer_ercislike@ercisfrei}{false}
+
+\DeclareOption{secbar}{%
+	\AfterClass*{beamer}{\renewcommand{\wiwwubeamer@footer}{\hspace*{-0.3cm}\insertsectionnavigationhorizontal{.8\textwidth}{}{}}}
+}
+\DeclareOption{subsecbar}{%
+	\AfterClass*{beamer}{\renewcommand{\wiwwubeamer@footer}{%
+		\hspace*{-0.3cm}\vspace*{1ex}\begin{minipage}[t][0pt]{\textwidth}%
+        						\insertsectionnavigationhorizontal{.8\linewidth}{}{}\vspace{-0.5ex}\insertsubsectionnavigationhorizontal{.8\linewidth}{}{\hskip0pt plus1filll}%
+                            \end{minipage}}}
+}
+\DeclareOption{numbered}{%
+	\AfterClass*{beamer}{\edef\inserttocsectionnumber{\the\beamer@tempcount}}
+	\AtBeginDocument{%
+    	\setbeamertemplate{section in toc}{\inserttocsectionnumber~\inserttocsection\par}
+		\setbeamertemplate{subsection in toc}{\leavevmode\leftskip=1.5em\inserttocsectionnumber.\inserttocsubsectionnumber~\inserttocsubsection\par}
+		\setbeamertemplate{subsubsection in toc}{\leavevmode\leftskip=3em\inserttocsectionnumber.\inserttocsubsectionnumber.\inserttocsubsubsectionnumber~\inserttocsubsubsection\par}
+	}
+}
+\DeclareOption{ercisfrei}{
+	\setboolean{wiwwubeamer_ercislike@ercisfrei}{true}
+}
+\DeclareOption*{%
+  \PackageWarning{wiwwubeamer_ercislike}{Unknown Option: \CurrentOption}%
+}
+\ProcessOptions*
+
+\AfterClass*{beamer}{%
+	\usetheme{ercis}
+}
+\ifthenelse{\boolean{wiwwubeamer_ercislike@ercisfrei}}{%
+	%\AtBeginDocument{%
+	%	\setbeamertemplate{background canvas}{\includegraphics[height=\paperheight]{ercisfrei_hg.pdf}}%
+	%}
+	\AfterClass*{beamer}{%
+		\pgfdeclareimage[height=\paperheight]{hgn}{ercisfrei_hgn}%
+		\pgfdeclareimage[height=\paperheight]{hg}{ercisfrei_hg}
+		\logo{\includegraphics{WI-Logo}}
+	}
+}{%
+	%\AtBeginDocument{%
+	%	\setbeamertemplate{background canvas}{\includegraphics[height=\paperheight]{ercis_hg.pdf}}
+	%}
+	\AfterClass*{beamer}{%
+		\pgfdeclareimage[height=\paperheight]{hgn}{ercis_hgn}
+		\pgfdeclareimage[height=\paperheight]{hg}{ercis_hg}
+		\logo{\mbox{~}}
+	}
+}

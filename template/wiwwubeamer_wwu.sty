@@ -1,0 +1,33 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesClass{wiwwubeamer_wwu}[2007/08/31 Beamer-Class (von Stephan Dlugosz) Vers. 0.5.4]
+
+%\RequirePackage{ifthen}
+\RequirePackage{scrlfile}
+
+\DeclareOption{secbar}{%
+	\AtBeginDocument{%
+		\setbeamertemplate{headline}{%
+			\hspace*{2.2cm}\begin{minipage}[t][0pt]{0.82\paperwidth}\insertsectionnavigationhorizontal{\linewidth}{}{}\end{minipage}\vspace*{-1.5ex}%
+		}
+	}
+}
+\DeclareOption{subsecbar}{%
+	\AtBeginDocument{%
+		\setbeamertemplate{headline}{%
+			\hspace*{2.2cm}\begin{minipage}[t][0pt]{.82\paperwidth}\insertsectionnavigationhorizontal{\linewidth}{}{}\vspace*{-0.5ex}\insertsubsectionnavigationhorizontal{\linewidth}{}{\hskip0pt plus1filll}\end{minipage}\vspace*{-1.5ex}
+		}
+	}
+}
+\DeclareOption*{%
+  \PackageWarning{wiwwubeamer_wwu}{Unknown Option: \CurrentOption}%
+}
+\ProcessOptions*
+
+%\AtBeginDocument{%
+%    \setbeamertemplate{background canvas}{\includegraphics[height=\paperheight]{wwu_hg.pdf}}%
+%}
+\AfterClass*{beamer}{%	
+  	\usetheme{wwu}
+  	\pgfdeclareimage[height=\paperheight]{hgn}{wwu_hg}%
+  	\pgfdeclareimage[height=\paperheight]{hg}{wwu_hg}
+}

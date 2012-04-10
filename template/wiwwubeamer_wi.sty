@@ -1,0 +1,24 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesClass{wiwwubeamer_wi}[2007/08/31 Beamer-Class (von Stephan Dlugosz) Vers. 0.5.4]
+
+\RequirePackage{scrlfile}
+
+\DeclareOption{secbar}{%
+	\PackageWarning{wiwwubeamer_wi}{Option secbar is not supported.}%
+}
+\DeclareOption{subsecbar}{%
+	\PackageWarning{wiwwubeamer_wi}{Option subsecbar is not supported.}%
+}
+\DeclareDefaultOption{%
+	\PackageWarning{wiwwubeamer_wi}{Unknown Option: \CurrentOption}%
+}
+\ProcessOptions*
+
+%\AtBeginDocument{%
+%	\setbeamertemplate{background canvas}{\includegraphics[height=\paperheight]{wi_hg.pdf}}%
+%}
+\AfterClass*{beamer}{%	
+	\usetheme{iswiwwu}
+  	\pgfdeclareimage[height=\paperheight]{hgn}{wi_hgn}%
+  	\pgfdeclareimage[height=\paperheight]{hg}{wi_hg}%
+}

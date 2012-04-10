@@ -1,0 +1,36 @@
+\documentclass[style=is]{wiwwuwordrprt}
+%\documentclass[style=is]{wiwwuwordartcl}
+
+\usepackage{wiwwubildertabellen}
+\usepackage{wiwwumathe}
+\usepackage{wiwwulistings}
+\usepackage{wiwwuabkuerzungen}
+
+\setdefaulttablepos{bt}
+\setdefaultfigurepos{bt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%% Angaben über Autor / Betreuer / Titel etc %%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{./../Head}
+
+\begin{document}
+
+\EinfTitelseite
+
+%Verzeichnisse
+\pagenumbering{Roman} % Seitennummerierung durch römische Ziffern
+%\phantomsection\addcontentsline{toc}{chapter}{\contentsname}
+\tableofcontents
+%\listoffigures
+%\listoftables
+
+\pagenumbering{arabic} % Seitennummerierung durch arabische Ziffern
+
+\input{./../Inhalt}
+
+%\bibliography{./../Literatur}
+
+%\AbschlErklaerung{20. Juni 2011}
+
+\end{document}

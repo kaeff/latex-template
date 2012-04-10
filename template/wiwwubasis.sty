@@ -1,0 +1,448 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{wiwwubasis}[2009/03/27 Basis-Befehle fuer alle Stile (von Stephan Dlugosz) Vers. 0.5.5]
+
+\RequirePackage{ifthen} % fuer die Fallunterscheidungen Article oder Report
+\RequirePackage{kvoptions} % fuer Paketoptionen
+
+\SetupKeyvalOptions{
+	family=wiwwubasis,
+	prefix=wiwwubasis@
+}
+
+\newcommand*{\wiwwubasis@RequiredPackages}{}
+
+\DeclareVoidOption{square}{%
+	\PassOptionsToPackage{square}{natbib}%
+}
+\DeclareVoidOption{round}{%
+	\PassOptionsToPackage{round}{natbib}%
+}
+\DeclareVoidOption{wordstylefootnotes}{%
+	\PassOptionsToPackage{bottom}{footmisc}%
+}
+\DeclareVoidOption{numbers}{%
+	\PassOptionsToPackage{numbers}{natbib}%
+}
+\DeclareVoidOption{tabularx}{%
+	\PassOptionsToPackage{hyperfootnotes=false}{hyperref}%
+}
+\DeclareVoidOption{toctotoc}{%
+	\newcommand{\wiwwubasis@toc}{}
+	\let\wiwwubasis@toc=\tableofcontents
+	\renewcommand{\tableofcontents}{%
+		\phantomsection\addcontentsline{toc}{chapter}{\contentsname}
+		\wiwwubasis@toc%
+	}
+}
+\DeclareVoidOption{bibtopic}{%
+	\g@addto@macro\wiwwubasis@RequiredPackages{\RequirePackage[dontoverridenumbers,sectcntreset,slow]{bibtopic}}
+}
+\DeclareBoolOption{noinputenc}
+\DeclareStringOption[german]{language}[german]
+\DeclareStringOption[onehalfspacing]{spacing}[onehalfspacing]
+\DeclareDefaultOption{%
+	\PackageWarning{wiwwubasis}{Unbekannte Option: \CurrentOption}%
+}
+\ProcessKeyvalOptions{wiwwubasis}
+
+\PassOptionsToPackage{\wiwwubasis@spacing}{setspace}%
+\DisableKeyvalOption{wiwwubasis}{spacing}
+
+%% Pakete
+\ifwiwwubasis@noinputenc 
+	\PackageInfo{wiwwubasis}{Option noinputenc gesetzt, es wird eine ASCII-Datei angenommen.}
+\else 
+	\RequirePackage[latin1]{inputenc}
+\fi
+\RequirePackage{fixltx2e} % LaTeX bugfixes
+\RequirePackage[UKenglish,ngerman]{babel}
+\RequirePackage{cmap} % fuer Ligaturen-support bei Suche in PDF 
+\RequirePackage[T1]{fontenc} % Fuer das Trennen von "Umlauten"
+\RequirePackage[stable,multiple]{footmisc} %fuer Positionierung der Fussnoten am Ende der Seite
+\RequirePackage{natbib} % fuer den Umbruch der \cite-Anweisung und den deutschen Stil
+\RequirePackage{mdwlist} % fuer fortgesetzte Nummerierungen \suspend{enumerate} \resume{enmuerate}
+\RequirePackage{textcomp} %fuer tm und andere Copyright Zeichen....
+\RequirePackage{eurosym} % Euro-Symbol
+\RequirePackage{setspace} % 1,5-zeiligen Abstand!
+\RequirePackage{enumerate} % fuer flexible Syntax in Listen!
+\RequirePackage[position=bottom,size=normalsize]{caption}[2003/12/20] % fuer Bild-/Tabellenunterschriften
+\RequirePackage{savefnmark} % Fuer wiederholte Fussnoten
+\RequirePackage[colorlinks=false,
+		pdfborder=0 0 0,
+		bookmarksnumbered=true,
+		breaklinks=true,
+		plainpages=false,
+		extension={pdf}]{hyperref}
+\RequirePackage{ellipsis} % fuer die korrekten Abstaende bei Auslassungspunkten mit \dots
+\RequirePackage[printonlyused]{acronym}
+\wiwwubasis@RequiredPackages
+\RequirePackage[automark,headsepline,plainheadsepline]{scrpage2} % fuer huebsche Kopfzeilen
+
+\newboolean{istartcl}
+\setboolean{istartcl}{false}
+
+\AfterClass*{wiwwuartcl}{%
+	\setboolean{istartcl}{true}
+	\PackageInfo{wiwwubasis}{Basis mit wiwwuartcl - Anpassungen geladen}
+}
+
+%%%%%%%%%%%%%%%%%%%% Keine Neunummerierung der Fussnoten nach einem Kapitel %%%%%%%%%%%%%%%
+\def\removefromreset#1#2{{%
+  \expandafter\let\csname c@#1\endcsname\removefromreset
+  \def\@elt##1{%
+    \expandafter\ifx\csname c@##1\endcsname\removefromreset
+    \else
+      \noexpand\@elt{##1}%
+    \fi}%
+  \expandafter\xdef\csname cl@#2\endcsname{%
+    \csname cl@#2\endcsname}}}
+\removefromreset{footnote}{chapter} %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\renewcommand{\headfont}{\footnotesize\upshape} %% damit in der Kopfzeile die Schrift aufrecht steht!
+\renewcommand*{\sectfont}{\bfseries} % fuer Times New Roman in den Ueberschriften!
+
+\newenvironment{wiwwubasis@tabitemize}{% 
+	\vspace*{-1\parsep}%
+	\begin{list}{\textbullet\hfill}{% 
+		\setlength{\leftmargin}{0.3cm}% 
+		\setlength{\labelsep}{0cm} %
+		\setlength{\labelwidth}{0.3cm}%
+		\setlength{\topsep}{0cm}%
+		\setlength{\partopsep}{0cm}%
+	}%
+}{% 
+    \vspace*{-2\parsep}%
+    \end{list}%
+} %
+\makecompactlist{tabularitemize}{wiwwubasis@tabitemize}
+
+\newenvironment{wiwwubasis@tabenumerate}[1][\arabic{enumi}.]{%
+	\vspace*{-1\parsep}%
+	\begin{list}{#1\hfill}{%
+        \usecounter{enumi} 
+		\setlength{\leftmargin}{1em} 
+		\setlength{\labelsep}{0cm} 
+		\setlength{\labelwidth}{1em}
+		\setlength{\topsep}{0cm}%
+		\setlength{\partopsep}{0cm}% 
+	} 
+}{% 
+	\vspace*{-2\parsep}%
+	\end{list} 
+} 
+\makecompactlist{tabularenumerate}{wiwwubasis@tabenumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%% weitere Einstellungen %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\schlange}{\symbol{126}} % Fuer das Schlange Symbol ~
+
+%%% fuer Uebersetzungen %%
+\newcommand{\imRahmendes}{im Rahmen des}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%% fuer die einfache Handhabung des Titelblatts %%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\concat}[2]{\protected@edef#1{#1#2}}
+
+\newcommand{\Thema}{}
+\newcommand{\ohneUmbrueche}[1]{\begingroup\def\\{}#1\endgroup}
+\newcommand{\PDFThema}{}
+\newcommand{\Typ}{}
+\newcommand{\Fachgebiet}{}
+\newcommand{\Zusatz}{}
+\newcommand{\Themensteller}{}
+\newcommand{\Betreuer}{}
+\newcommand{\Autor}{}
+\newcommand{\Strasse}{}
+\newcommand{\Ort}{}
+\newcommand{\Telefonnummer}{}
+\newcommand{\EMail}{}
+\newcommand{\Abgabetermin}{}
+\newcommand{\Ausgabetermin}{}
+\newcommand{\Lehrstuhl}{}
+
+%% geklaut aus dem Beamer-Paket, um den Titel einfacher zu setzen
+\pdfstringdefDisableCommands{%
+    \let\\=\
+    \let\newline=\\%
+}%
+
+\newcommand{\setPDFThema}[1]{\renewcommand{\PDFThema}{#1}}%%% nur aus Kompatibilitaetsgruenden vorhanden
+\newcommand{\setThema}[1]{\renewcommand{\Thema}{#1}\setPDFThema{#1}}
+\newcommand{\setTyp}[1]{\renewcommand{\Typ}{#1}}
+\newcommand{\setFachgebiet}[1]{\renewcommand{\Fachgebiet}{#1}}
+\newcommand{\setZusatz}[1]{\renewcommand{\Zusatz}{\imRahmendes\ #1}}
+\newcommand{\setThemensteller}[1]{\renewcommand{\Themensteller}{#1}}
+\newcommand{\setBetreuer}[1]{\renewcommand{\Betreuer}{#1}} % nur aus Kompatibilitaetsgruenden seit 0.3.6 (neu: \addBetreuer)
+\newcommand{\setZweiterBetreuer}[1]{\addBetreuer{#1}}
+\newcommand{\setAutor}[1]{\renewcommand{\Autor}{#1}}
+\newcommand{\setStrasse}[1]{\renewcommand{\Strasse}{#1}}
+\newcommand{\setOrt}[1]{\renewcommand{\Ort}{#1}}
+\newcommand{\setTelefonnummer}[1]{\renewcommand{\Telefonnummer}{#1}}
+\newcommand{\setEMail}[1]{\renewcommand{\EMail}{#1}}
+\newcommand{\setAusgabetermin}[1]{\renewcommand{\Ausgabetermin}{#1}}
+\newcommand{\setAbgabetermin}[1]{\renewcommand{\Abgabetermin}{#1}}
+\newcommand{\setLehrstuhl}[1]{\renewcommand{\Lehrstuhl}{#1}}
+
+\newcommand{\addBetreuer}[1]{%
+  \concat{\Betreuer}{\protect\\ \protect\> #1}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Fuer das Design des Titelblatts  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Befehle erfinden!
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Hyperrefs unterstrichen
+\newcommand{\myhref}{}
+\let\myhref=\href
+\def\href{\hyper@normalise\href@}
+\renewcommand{\href}[2]{\underline{\myhref{#1}{#2}}}
+\urlstyle{same}
+
+%Anpassungen fuer evtl nutzung des backref-Paket
+\AfterPackage*{backref}{
+   \renewcommand*{\backref}[1]{}%
+   \renewcommand*{\backrefalt}[4]{%
+   	(\seename~%
+   	\ifnum#1=1 %
+		\pagename~%   
+	   \else
+   		\backrefpagesname\ %
+   	\fi
+   	#2)%
+   }
+}
+\newcommand{\backrefparscantrue}{}
+\newcommand{\backrefparscanfalse}{}
+\newcommand{\backrefprint}{}
+
+%Umbruch innerhalb von Fussnoten weniger ws machen
+\interfootnotelinepenalty=5000
+
+% Anhang-Verwaltung
+\newcommand{\myappendix}{}
+\let\myappendix=\appendix
+
+\newcommand{\eEinfTitelseite}{%
+	\maketitle%
+}
+\newcommand{\gEinfTitelseite}{%
+	\maketitle%
+}
+\newcommand{\EinfTitelseite}{%
+	\hypersetup{pageanchor=false}\gEinfTitelseite\hypersetup{pageanchor=true}
+}
+\newcommand{\AbschlErklaerung}[2][M\"{u}nster]{%
+	\gAbschlErklaerung{#1}{#2}
+}
+
+\newlength{\verzIndent}
+\setlength{\verzIndent}{3cm}
+\newlength{\verzWidth}
+\setlength{\verzWidth}{12.5cm}
+
+\newenvironment{Verzeichnis}[1]{%
+	\ifthenelse{\boolean{istartcl}}{%
+		\section*{#1}\phantomsection\addcontentsline{toc}{section}{#1}%
+	}{%
+	    \chapter*{#1}\phantomsection\addcontentsline{toc}{chapter}{#1}%
+	}%
+	\markboth{#1}{#1}\vspace*{-2.5ex}
+	\begin{flushleft}%
+    \begin{singlespacing}%
+	\begin{tabbing}%
+	\hspace*{\verzIndent}\= \kill%
+}{%
+	\end{tabbing}%
+	\end{singlespacing}%
+	\end{flushleft}%
+}
+\newcommand{\VerzEintrag}[2]{#1\> \parbox[t]{\verzWidth}{\strut #2\strut}\\[1ex]}
+\newcommand{\VerzText}[1]{%
+	\begin{minipage}{\linewidth}[t]\begin{onehalfspacing}%
+        	#1%
+    \end{onehalfspacing}\end{minipage}\\[1ex]%
+}
+
+
+\newcommand{\wiwwubasis@abkverzname}{Abk\"{u}rzungsverzeichnis}
+\addto\captionsUSenglish{%	
+	\renewcommand{\wiwwubasis@abkverzname}{Abbreviations}
+}%
+\addto\captionsenglish{%	
+	\renewcommand{\wiwwubasis@abkverzname}{Abbreviations}
+}%
+\addto\captionsUKenglish{%	
+	\renewcommand{\wiwwubasis@abkverzname}{Abbreviations}
+}%
+\addto\captionsngerman{%	
+	\renewcommand{\wiwwubasis@abkverzname}{Abk\"{u}rzungsverzeichnis}
+}%
+
+\newenvironment{AbkVerzeichnis}{%
+	\ifthenelse{\boolean{istartcl}}{%
+		\section*{\wiwwubasis@abkverzname}\phantomsection\addcontentsline{toc}{section}{\wiwwubasis@abkverzname}%
+	}{%
+	    \chapter*{\wiwwubasis@abkverzname}\phantomsection\addcontentsline{toc}{chapter}{\wiwwubasis@abkverzname}%
+	}%
+	\markboth{\wiwwubasis@abkverzname}{\wiwwubasis@abkverzname}\vspace*{-2.5ex}%
+	\begin{flushleft}%
+    \begin{singlespacing}%
+	\begin{acronym}[\hspace*{\verzIndent}]
+}{%
+	\end{acronym}%
+	\end{singlespacing}%
+	\end{flushleft}%
+}
+
+\renewenvironment{AC@deflist}[1]{%
+	\ifAC@nolist%
+	\else%
+		\raggedright\begin{list}{}%
+		{\settowidth{\labelwidth}{\textbf{\textsf{#1}}}%
+		\setlength{\leftmargin}{\labelwidth}%
+		\addtolength{\leftmargin}{\labelsep}%
+		\renewcommand{\makelabel}{}
+		\setlength{\itemsep}{1ex}
+		\setlength{\parsep}{0pt}
+		}
+	\fi
+}{%
+	\ifAC@nolist%
+	\else%
+		\end{list}%
+	\fi
+}%
+
+% Fuer den Anhang!
+\ifthenelse{\boolean{istartcl}}{}{%
+	\newcommand{\AnhChapter}[1]{%
+		\chapter{#1}
+	}
+}
+\newcommand{\AnhSection}[1]{%
+	\section{#1}%
+}
+\ifthenelse{\boolean{istartcl}}{%
+	\newcommand{\AnhSubSection}[1]{%
+		\subsection{#1}
+	}
+}{}
+
+\newcommand{\gAbschlErklaerung}[2]{%
+	\ifthenelse{\boolean{istartcl}}{%
+		\section*{Abschlie\ss ende Er\-kl\"{a}\-rung}\thispagestyle{empty}
+	}{%
+		\chapter*{Abschlie\ss ende Er\-kl\"{a}\-rung}\thispagestyle{empty}
+	}
+	Ich versichere hiermit, dass ich meine \Typ\ \glqq \ohneUmbrueche{\PDFThema}\grqq\
+	selb\-st\"{a}n\-dig und ohne fremde Hilfe angefertigt habe, und dass ich alle von anderen Autoren w\"{o}rtlich \"{u}\-ber\-nom\-men\-en
+	Stellen wie auch die sich an die Ge\-dan\-ken\-g\"{a}n\-ge anderer Autoren eng anlehnenden Aus\-f\"{u}h\-run\-gen meiner Arbeit besonders
+	gekennzeichnet und die Quellen zitiert habe.
+
+	#1, den #2%
+}
+\newcommand{\eAbschlErklaerung}[2]{%
+	\ifthenelse{\boolean{istartcl}}{%
+		\section*{Plagiarism declaration}\thispagestyle{empty}
+	}{%
+		\chapter*{Plagiarism declaration}\thispagestyle{empty}
+	}
+	I hereby declare that, to the best of my knowledge and belief, this \Typ\ titled ``\ohneUmbrueche{\PDFThema}'' is
+	my own work. I confirm that each significant contribution to, and quotation in this thesis from the work,
+	or works of other people is indicated through the proper use of citations and references.
+
+	#1, on the #2%
+}
+
+% damit die Links an die richtige Stelle zeigen
+\ifthenelse{\boolean{istartcl}}{%
+	\newcommand{\wiwwubasis@tmp}{}
+	\let\wiwwubasis@tmpfig=\listoffigures
+	\renewcommand{\listoffigures}{%
+		\phantomsection
+		\wiwwubasis@tmpfig
+	}
+	\let\wiwwubasis@tmptab=\listoftables
+	\renewcommand{\listoftables}{%
+		\phantomsection
+		\wiwwubasis@tmptab
+	}
+}{}
+
+% Umdefinieren, damit kein Umbruch innerhalb eines Eintrags erfolgt
+\newcommand{\loadbibstyle}{\bibliographystyle{natdin}}
+\newcommand{\setbibstyle}[1]{%
+	\renewcommand{\loadbibstyle}{\bibliographystyle{#1}}
+}
+
+\newcommand{\mybibliography}[1]{}
+\let\mybibliography=\bibliography
+\renewcommand{\bibliography}[1]{%
+	\loadbibstyle
+	
+	% Links wieder ohne unterstreichung
+	\let\href=\myhref
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+	\begin{samepage} \@itempenalty=0
+	\ifthenelse{\boolean{istartcl}}{%
+		\refstepcounter{section}
+	}{%
+		\refstepcounter{chapter}
+	}
+	\mybibliography{#1}
+	\end{samepage}
+}
+
+\newcommand{\Literaturverzeichnisse}[1]{}
+\let\Literaturverzeichnisse=\bibliography
+
+% Ausfuehren der Sprachoptionen
+\ifthenelse{\equal{\wiwwubasis@language}{german}}{
+	\AtBeginDocument{\selectlanguage{ngerman}}
+}{%
+	\ifthenelse{\equal{\wiwwubasis@language}{english}}{%
+		\AtBeginDocument{\selectlanguage{UKenglish}}
+		\newcommand{\Land}{}
+		\newcommand{\setLand}[1]{\renewcommand{\Land}{#1}}
+		\renewcommand{\AbschlErklaerung}[2][M\"{u}nster]{\eAbschlErklaerung{#1}{#2}}
+		\renewcommand{\EinfTitelseite}{\hypersetup{pageanchor=false}\eEinfTitelseite\hypersetup{pageanchor=true}}
+		\renewcommand{\imRahmendes}{in the context of}
+	}{%
+		\PackageWarning{wiwwubasis}{Unknown language: \wiwwubasis@language}
+		\PackageInfo{wiwwubasis}{Using: german}
+		\AtBeginDocument{\selectlanguage{ngerman}}
+	}
+}
+\DisableKeyvalOption{wiwwubasis}{language}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\ifthenelse{\boolean{istartcl}}{%
+	\setcounter{secnumdepth}{3}
+	\setcounter{tocdepth}{3}
+}{%
+	\setcounter{secnumdepth}{2}
+	\setcounter{tocdepth}{2}
+}
+
+%% zu Dokumentbeginn %%%%%%%%%%%%%%%%
+\AtBeginDocument{
+	\hypersetup{pdftitle={\PDFThema},pdfauthor={\Autor}}
+
+	\author{\Autor}
+	\title{\Thema}
+
+	% Hurenkinder und Schusterjungen vermeiden!
+	\clubpenalty = 10000
+	\widowpenalty = 10000
+	\displaywidowpenalty = 10000
+}

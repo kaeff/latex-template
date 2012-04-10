@@ -1,0 +1,227 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{wiwwuword_aw}[2006/09/06 Basis-Befehle fuer Grob-Stil (von Stephan Dlugosz) Vers. 0.5.5]
+
+\RequirePackage{iswiwwu}
+
+\renewcommand{\addBetreuer}[1]{\concat{\Betreuer}{, #1}}
+\geometry{left=2.5cm, textwidth=12.5cm, top=2.5cm, textheight=25.7cm}
+\AfterPackage{wiwwubildertabellen}{
+	\renewcommand{\tabellecentering}{\centering} % zentrierte Tabellen
+	\renewcommand{\grafikcentering}{\centering} % und Grafiken
+	\renewcommand{\ltabellepos}{c} % keine zentrierung
+	\deffootnote{0.5cm}{0.0cm}{\textsuperscript{\normalfont\thefootnotemark}\hspace{0.1cm}} % Fussnotenstil
+}
+
+\setbibstyle{iswiwwu}
+
+\setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{5}
+
+\chead[\pagemark]{\pagemark}
+\setheadsepline{0pt}
+
+\renewcommand{\footnoterule}{\hrule width 5cm height 1pt \vspace{0.5cm}}
+
+\setlength{\skip\footins}{1cm plus 0.5cm minus 0.25cm }
+
+% Kapitel-Ueberschriften
+\ifthenelse{\boolean{istartcl}}{%
+	\titleformat{\section}%
+	  {\normalfont\Large\bfseries}%
+	  {\thesection}%
+	  {0.5cm}%
+	  {}%
+	\titlespacing{\section}{0pt}{-6pt}{6pt}
+	\titleformat{\subsection}%
+	  {\normalfont\large\bfseries}%
+	  {\makebox[0pt][l]{\thesubsection}}%
+	  {1cm}%
+	  {}%
+	\titlespacing{\subsection}{0pt}{8pt}{0pt}
+	\titleformat{\subsubsection}%
+	  {\normalfont\normalsize\bfseries}%
+	  {\makebox[0pt][l]{\thesubsubsection}}%
+	  {1.25cm}%
+	  {}%
+	\titlespacing{\subsubsection}{0pt}{8pt}{0pt}
+	\titleformat{\paragraph}%
+	  {\normalfont\normalsize\bfseries}%
+	  {\makebox[0pt][l]{\theparagraph}}%
+	  {1.5cm}%
+	  {}%
+	\titlespacing{\paragraph}{0pt}{8pt}{0pt}
+	\titleformat{\subparagraph}%
+	  {\normalfont\normalsize\bfseries}%
+	  {\makebox[0pt][l]{\thesubparagraph}}%
+	  {2cm}%
+	  {}%
+	\titlespacing{\subparagraph}{0pt}{8pt}{0pt}
+}{%
+	\titleformat{\chapter}%
+	  {\normalfont\Large\bfseries}%
+	  {\thechapter}%
+	  {0.5cm}%
+	  {}%
+	\titlespacing{\chapter}{0pt}{-6pt}{6pt}
+	\titleformat{\section}%
+	  {\normalfont\large\bfseries}%
+	  {\makebox[0pt][l]{\thesection}}%
+	  {1cm}%
+	  {}%
+	\titlespacing{\section}{0pt}{8pt}{0pt}
+	\titleformat{\subsection}%
+	  {\normalfont\normalsize\bfseries}%
+	  {\makebox[0pt][l]{\thesubsection}}%
+	  {1.25cm}%
+	  {}%
+	\titlespacing{\subsection}{0pt}{8pt}{0pt}
+	\titleformat{\subsubsection}%
+	  {\normalfont\normalsize\bfseries}%
+	  {\makebox[0pt][l]{\thesubsubsection}}%
+	  {1.5cm}%
+	  {}%
+	\titlespacing{\subsubsection}{0pt}{8pt}{0pt}
+	\titleformat{\paragraph}%
+	  {\normalfont\normalsize\bfseries}%
+	  {\makebox[0pt][l]{\theparagraphsection}}%
+	  {2cm}%
+	  {}%
+	\titlespacing{\paragraph}{0pt}{8pt}{0pt}
+}
+
+\setlength{\bibhang}{1.5cm}
+\setlength{\bibsep}{0pt}
+
+\DeclareCaptionLabelSeparator{mylabelsep}{\ }
+\DeclareCaptionLabelFormat{mylabelformat}{#1~#2:}
+\captionsetup{labelformat={mylabelformat},labelfont={bf},labelsep=mylabelsep,format=hang,singlelinecheck=false}
+
+\renewcommand{\cftdot}{\ }
+\setlength{\cfttabindent}{0pt}
+\setlength{\cftfigindent}{0pt}
+\renewcommand{\cfttabpresnum}{\tablename\ }
+\renewcommand{\cftfigpresnum}{\figurename\ }
+\renewcommand{\cfttabaftersnum}{:}
+\renewcommand{\cftfigaftersnum}{:}
+\setlength{\cfttabnumwidth}{2cm}
+\setlength{\cftfignumwidth}{2cm}
+\ifthenelse{\boolean{istartcl}}{%
+	\setlength{\cftsubsecindent}{0.5cm}
+	\setlength{\cftsubsubsecindent}{1.25cm}
+	\setlength{\cftsecnumwidth}{0.5cm}
+	\setlength{\cftsubsecnumwidth}{0.75cm}
+	\setlength{\cftsubsubsecnumwidth}{1cm}
+	\setlength{\cftparanumwidth}{1.25cm}
+	\setlength{\cftsubparanumwidth}{1.5cm}
+	\renewcommand{\cftsecfont}{\mdseries}
+	\renewcommand{\cftsecpagefont}{\mdseries}
+	\setlength{\cftbeforesecskip}{2pt}
+	\setlength{\cftbeforesubsecskip}{-2pt}
+	\setlength{\cftbeforesubsubsecskip}{-4pt}
+}{%
+	\setlength{\cftsecindent}{0.5cm}
+	\setlength{\cftsubsecindent}{1.25cm}
+	\setlength{\cftchapnumwidth}{0.5cm}
+	\setlength{\cftsecnumwidth}{0.75cm}
+	\setlength{\cftsubsecnumwidth}{1cm}
+	\setlength{\cftsubsubsecnumwidth}{1.25cm}
+	\setlength{\cftparanumwidth}{1.5cm}
+	\renewcommand{\cftchapfont}{\mdseries}
+	\renewcommand{\cftchappagefont}{\mdseries}
+	\setlength{\cftbeforechapskip}{2pt}
+	\setlength{\cftbeforesecskip}{-2pt}
+	\setlength{\cftbeforesubsecskip}{-4pt}
+}
+\cftsetrmarg{2.25ex}
+
+\setlength{\verzIndent}{2cm}
+\setlength{\verzWidth}{10.5cm}
+
+\renewcommand{\gEinfTitelseite}{
+\begin{titlepage}
+\enlargethispage{1cm}
+\thispagestyle{empty}
+\begin{center}
+\Lehrstuhl
+
+\vspace*{2cm}
+
+{\Huge \Typ}
+
+\vspace*{1.2cm}
+
+zum Thema
+
+\vspace*{0.4cm}
+
+{\Huge \singlespacing \Thema\\}
+
+\vspace*{1.7cm}
+
+im Fach: \Fachgebiet\\
+
+\vspace*{1.8cm}
+
+Themensteller: \Themensteller\\
+Betreuer: \Betreuer
+
+\vspace*{2.1cm}
+
+Ausgabetermin: \Ausgabetermin\\[1ex]
+Abgabetermin: \Abgabetermin
+
+\vspace*{0.3cm}
+
+\singlespacing
+vorgelegt von:\\
+\Autor\\
+\Strasse
+
+\Ort\\
+\end{center}
+\end{titlepage}
+}
+\renewcommand{\eEinfTitelseite}{
+\begin{titlepage}
+\enlargethispage{1cm}
+\thispagestyle{empty}
+\begin{center}
+\Lehrstuhl
+
+\vspace*{2cm}
+
+{\Huge \Typ}
+
+\vspace*{1.2cm}
+
+zum Thema
+
+\vspace*{0.4cm}
+
+{\Huge \singlespacing \Thema\\}
+
+\vspace*{1.7cm}
+
+im Fach: \Fachgebiet\\
+
+\vspace*{1.8cm}
+
+Supervisor: \Themensteller\\
+Tutors: \Betreuer
+
+\vspace*{2.1cm}
+
+Ausgabetermin: \Ausgabetermin\\[1ex]
+Deadline: \Abgabetermin
+
+\vspace*{0.3cm}
+
+\singlespacing
+submitted by:\\
+\Autor\\
+\Strasse
+
+\Ort\\
+\Land\\
+\end{titlepage}
+}

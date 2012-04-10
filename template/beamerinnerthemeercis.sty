@@ -1,0 +1,422 @@
+%Version 05.01.2008
+
+% Copyright 2008 by Stephan Dlugosz <stephan.dlugosz@googlemail.com>
+
+\mode<presentation>
+
+% Some images:
+
+\pgfdeclareimage[width=14pt,height=12pt]{beamericonbook}{beamericonbook}
+\pgfdeclareimage[width=14pt,height=12pt]{beamericonbookshaded}{beamericonbook.20}
+\pgfaliasimage{beamericonbook.!20opaque}{beamericonbookshaded}
+\pgfaliasimage{beamericonbook.!15opaque}{beamericonbookshaded}
+\pgfaliasimage{beamericonbook.!10opaque}{beamericonbookshaded}
+\pgfaliasimage{beamericonbook.!5opaque}{beamericonbookshaded}
+\pgfaliasimage{beamericonbook.!2opaque}{beamericonbookshaded}
+\pgfdeclareimage[width=11pt,height=14pt]{beamericonarticle}{beamericonarticle}
+\pgfdeclareimage[width=11pt,height=14pt]{beamericonarticleshaded}{beamericonarticle.20}
+\pgfaliasimage{beamericonarticle.!20opaque}{beamericonarticleshaded}
+\pgfaliasimage{beamericonarticle.!15opaque}{beamericonarticleshaded}
+\pgfaliasimage{beamericonarticle.!10opaque}{beamericonarticleshaded}
+\pgfaliasimage{beamericonarticle.!5opaque}{beamericonarticleshaded}
+\pgfaliasimage{beamericonarticle.!2opaque}{beamericonarticleshaded}
+
+
+% Title page: default
+
+\defbeamertemplate*{title page}{ercis}[1][]
+{ \parbox[t][0pt][c]{0pt}{\hspace*{10.95cm}\raisebox{-2.5cm}{\resizebox{7mm}{!}{\insertlogo}}}
+
+  \vspace*{3.525cm}
+  \hspace*{3.655cm}
+  \begin{beamercolorbox}[left,#1]{title}
+    \usebeamerfont{title}\begin{minipage}[t][0pt][t]%
+{\linewidth}\begin{minipage}[t][0pt][t]
+{\linewidth} \inserttitle \end{minipage}\vskip1.25em{\usebeamerfont{subtitle}%
+\usebeamercolor[fg]{subtitle}\insertsubtitle\par}\end{minipage}\par%    
+  \end{beamercolorbox}%
+  \vfill
+  \usebeamertemplate*{footline on title page}
+}
+
+
+% Part page: default
+
+\defbeamertemplate*{part page}{ercis}[1][]
+{
+  \begin{centering}
+    {\usebeamerfont{part name}\usebeamercolor[fg]{part name}\partname~\insertromanpartnumber}
+    \vskip1em\par
+    \begin{beamercolorbox}[sep=8pt,center,#1]{part title}
+      \usebeamerfont{part title}\insertpart\par
+    \end{beamercolorbox}
+  \end{centering}
+}
+
+
+% Frame title: default
+
+\defbeamertemplate*{frametitle}{ercis}[1][left]
+{
+  \vspace*{0.175cm}\hfill
+  \usebeamerfont{frametitle}
+  \usebeamercolor{frametitle}
+  \parbox[b][1ex][b]{0.96\linewidth}{\raggedleft\colorbox{bg}{\insertframetitle}}\hspace*{0.078cm}
+  %\hspace*{0.3cm}
+  %\ifbeamercolorempty[bg]{frametitle}{}{\nointerlineskip}%
+  %\@tempdima=\textwidth%
+  %\advance\@tempdima by\beamer@leftmargin%
+  %\advance\@tempdima by\beamer@rightmargin%
+  %\begin{beamercolorbox}[sep=0.3cm,#1,wd=\the\@tempdima]{frametitle}
+   % \if@tempswa\else\csname beamer@fte#1\endcsname\fi%
+   % {\usebeamerfont{frametitle}\hspace*{1.5cm}\vspace*{5mm}\insertframetitle\par}%
+    %{%
+     % \ifx\insertframesubtitle\@empty%
+      %\else%
+      %{\usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}\hspace*{1.5cm}\insertframesubtitle\par}%
+      %\fi
+    %}%
+    %\if@tempswa\else\vskip-.3cm\fi% set inside beamercolorbox... evil here...
+  %\end{beamercolorbox}%
+}
+
+\def\beamer@fteright{\vskip0.35cm\advance\leftskip by 1.7cm\advance\rightskip by1.7cm}
+
+
+% Frame title continuations, default
+
+\defbeamertemplate*{frametitle continuation}{ercis}{\insertcontinuationcountroman}
+
+
+
+
+%
+% Table of contents
+%
+
+%\defbeamertemplateparent{sections/subsections in toc}{section in toc,subsection in toc}
+%{}
+
+%\defbeamertemplateparent{sections/subsections in toc shaded}{section in toc shaded,subsection in toc shaded}[1][20]
+%{[#1]}
+
+
+
+
+% (sub-)section in toc: default
+
+\defbeamertemplate*{section in toc}{ercis}
+{\inserttocsection\par}
+
+\defbeamertemplate*{subsection in toc}{ercis}
+{\leavevmode\leftskip=1.5em\inserttocsubsection\par}
+
+\defbeamertemplate*{subsubsection in toc}{ercis}
+{\leavevmode\leftskip=3em\inserttocsubsubsection\par}
+
+
+% (sub-)section in toc shaded, default
+
+\defbeamertemplate*{section in toc shaded}{ercis}[1][20]
+{\begin{colormixin}{#1!parent.bg}\usebeamertemplate{section in toc}\end{colormixin}\unskip}
+
+\defbeamertemplate*{subsection in toc shaded}{ercis}[1][20]
+{\begin{colormixin}{#1!parent.bg}\usebeamertemplate{subsection in toc}\end{colormixin}\unskip}
+ 
+\defbeamertemplate*{subsubsection in toc shaded}{ercis}[1][20]
+{\begin{colormixin}{#1!parent.bg}\usebeamertemplate{subsubsection in toc}\end{colormixin}\unskip}
+
+
+
+
+
+%
+% Item
+%
+
+%\defbeamertemplateparent{items}{itemize items,enumerate items}
+%{}
+
+
+% Itemize items
+
+%\defbeamertemplateparent{itemize items}{itemize item,itemize subitem,itemize subsubitem}
+%{}
+
+
+% Itemize items, default
+
+\defbeamertemplate*{itemize item}{ercis}{\scriptsize\hbox{\donotcoloroutermaths\tiny$\blacksquare$}}
+\defbeamertemplate*{itemize subitem}{ercis}{\tiny\hbox{\donotcoloroutermaths\tiny$\Box$}}
+\defbeamertemplate*{itemize subsubitem}{ercis}{\tiny\hbox{\donotcoloroutermaths\tiny$\Box$}}
+
+
+% Enumerate items, default
+
+%\defbeamertemplateparent{enumerate items}{enumerate item,enumerate subitem,enumerate subsubitem,enumerate mini}
+%{}
+
+\defbeamertemplate*{enumerate item}{ercis}{\insertenumlabel.}
+\defbeamertemplate*{enumerate subitem}{ercis}{\insertenumlabel.\insertsubenumlabel}
+\defbeamertemplate*{enumerate subsubitem}{ercis}{\insertenumlabel.\insertsubenumlabel.\insertsubsubenumlabel}
+\defbeamertemplate*{enumerate mini template}{ercis}{\insertenumlabel}
+
+
+% Description item width
+
+\defbeamertemplate*{description item}{ercis}{\insertdescriptionitem}
+
+
+
+% Itemize/Enumerate body
+
+\defbeamertemplate*{itemize/enumerate body begin}{ercis}{}
+\defbeamertemplate*{itemize/enumerate body end}{ercis}{}
+
+\defbeamertemplate*{itemize/enumerate subbody begin}{ercis}{}
+\defbeamertemplate*{itemize/enumerate subbody end}{ercis}{}
+
+\defbeamertemplate*{itemize/enumerate subsubbody begin}{ercis}{}
+\defbeamertemplate*{itemize/enumerate subsubbody end}{ercis}{}
+
+
+
+% Alerted text
+
+\defbeamertemplate*{alerted text begin}{ercis}{\setbeamercolor{local structure}{parent=alerted text}}
+
+
+
+% Structured text
+
+% empyt defaults
+
+
+% Bibliography items
+
+\defbeamertemplate*{bibliography item}{ercis}
+{\lower3.5pt\hbox{\hskip2pt\pgfuseimage{beamericonarticle}\hskip1pt}}
+
+\defbeamertemplate*{bibliography entry article}{ercis}{}
+\defbeamertemplate*{bibliography entry title}{ercis}{\par}
+\defbeamertemplate*{bibliography entry location}{ercis}{\par}
+\defbeamertemplate*{bibliography entry note}{ercis}{\par}
+
+
+% Buttons
+
+\newdimen\beamer@dima%
+\newdimen\beamer@dimb%
+
+\defbeamertemplate*{button}{ercis}
+{%
+  \setbox\beamer@tempbox=\hbox{{\insertbuttontext}}%
+  \ht\beamer@tempbox=6pt%
+  \dp\beamer@tempbox=0pt%
+  \setbox\beamer@tempbox=\vbox{\box\beamer@tempbox\vskip2pt}%
+  \beamer@tempdim=\wd\beamer@tempbox%
+  \beamer@dima=\beamer@tempdim\advance\beamer@dima by2.2pt
+  \beamer@dimb=\beamer@tempdim\advance\beamer@dimb by4pt
+  \begin{pgfpicture}{-4pt}{0pt}{\the\beamer@tempdim}{8pt}
+    \color{bg}
+    \pgfsetlinewidth{0.8pt}
+    \pgfqmoveto{0}{0}
+    \pgfqcurveto{-2.2}{0}{-4}{1.8}{-4}{4}
+    \pgfqcurveto{-4}{6.2}{-2.2}{8}{0}{8}
+    \pgflineto{\pgfpoint{\the\beamer@tempdim}{8pt}}
+    \pgfcurveto%
+    {\pgfpoint{\the\beamer@dima}{8pt}}%
+    {\pgfpoint{\the\beamer@dimb}{6.2pt}}%
+    {\pgfpoint{\the\beamer@dimb}{4pt}}
+    \pgfcurveto%
+    {\pgfpoint{\the\beamer@dimb}{1.8pt}}%
+    {\pgfpoint{\the\beamer@dima}{0pt}}%
+    {\pgfpoint{\the\beamer@tempdim}{0pt}}
+    \pgfclosepath
+    \pgffill
+    \colorlet{bg}{parent.bg}
+    \usebeamercolor[fg]{button border}
+    \pgfqmoveto{0}{0}
+    \pgfqcurveto{-2.2}{0}{-4}{1.8}{-4}{4}
+    \pgfqcurveto{-4}{6.2}{-2.2}{8}{0}{8}
+    \pgflineto{\pgfpoint{\the\beamer@tempdim}{8pt}}
+    \pgfcurveto%
+    {\pgfpoint{\the\beamer@dima}{8pt}}%
+    {\pgfpoint{\the\beamer@dimb}{6.2pt}}%
+    {\pgfpoint{\the\beamer@dimb}{4pt}}
+    \pgfcurveto%
+    {\pgfpoint{\the\beamer@dimb}{1.8pt}}%
+    {\pgfpoint{\the\beamer@dima}{0pt}}%
+    {\pgfpoint{\the\beamer@tempdim}{0pt}}
+    \pgfclosepath
+    \pgfstroke
+  \end{pgfpicture}%
+  \hskip-\beamer@tempdim%
+  \box\beamer@tempbox%
+  \kern4pt%
+}
+
+
+% Abstract
+
+\defbeamertemplate*{abstract title}{ercis}
+{%
+  \begin{center}%
+    \abstractname
+  \end{center}%
+}
+
+\defbeamertemplate*{abstract begin}{ercis}
+{\beamercolorbox[vmode]{abstract}\leftskip2em\rightskip2em plus 1fill\usebeamerfont*{abstract}}
+
+\defbeamertemplate*{abstract end}{ercis}
+{\medskip\endbeamercolorbox}
+
+
+% Verse
+
+\defbeamertemplate*{verse begin}{ercis}
+{\beamercolorbox[vmode]{verse}}
+
+\defbeamertemplate*{verse end}{ercis}
+{\endbeamercolorbox}
+
+
+% Quotation
+
+\defbeamertemplate*{quotation begin}{ercis}
+{\beamercolorbox[vmode]{quotation}}
+
+\defbeamertemplate*{quotation end}{ercis}
+{\endbeamercolorbox}
+
+
+% Quote
+
+\defbeamertemplate*{quote begin}{ercis}
+{\beamercolorbox[vmode]{quote}}
+
+\defbeamertemplate*{quote end}{ercis}
+{\endbeamercolorbox}
+
+
+% Footnotes
+
+\defbeamertemplate*{footnote}{ercis}
+{
+  \parindent 1em\noindent%
+  \raggedright
+  \hbox to 1.8em{\hfil\insertfootnotemark}\insertfootnotetext\par%
+}
+
+
+% Captions
+
+\defbeamertemplate*{caption}{ercis}
+{%
+  \raggedright
+  {%
+    \usebeamercolor[fg]{caption name}%
+    \usebeamerfont*{caption name}%
+    \insertcaptionname:%
+  }
+  \insertcaption\par
+}
+
+
+% Blocks
+
+%\defbeamertemplateparent{blocks}{block begin,block end,%
+%  block alerted begin,block alerted end,%
+%  block example begin,block example end}
+%{}
+
+\defbeamertemplate*{block begin}{ercis}
+{
+  \par\vskip\medskipamount%
+  \begin{beamercolorbox}[colsep*=.75ex]{block title}
+    \usebeamerfont*{block title}\insertblocktitle%
+  \end{beamercolorbox}%
+  {\parskip0pt\par}%
+  \ifbeamercolorempty[bg]{block title}
+  {}
+  {\ifbeamercolorempty[bg]{block body}{}{\nointerlineskip\vskip-0.5pt}}%
+  \usebeamerfont{block body}%
+  \begin{beamercolorbox}[colsep*=.75ex,vmode]{block body}%
+    \ifbeamercolorempty[bg]{block body}{\vskip-.25ex}{\vskip-.75ex}\vbox{}%
+}
+\defbeamertemplate*{block end}{ercis}
+{\end{beamercolorbox}\vskip\smallskipamount}
+
+\defbeamertemplate*{block alerted begin}{ercis}
+{
+  \par\vskip\medskipamount%
+  \begin{beamercolorbox}[colsep*=.75ex]{block title alerted}
+    \usebeamerfont*{block title alerted}\insertblocktitle%
+  \end{beamercolorbox}%
+  {\parskip0pt\par}%
+  \ifbeamercolorempty[bg]{block title alerted}
+  {}
+  {\ifbeamercolorempty[bg]{block body alerted}{}{\nointerlineskip\vskip-0.5pt}}%
+  \usebeamerfont{block body alerted}%
+  \begin{beamercolorbox}[colsep*=.75ex,vmode]{block body alerted}%
+    \ifbeamercolorempty[bg]{block body alerted}{\vskip-.25ex}{\vskip-.75ex}\vbox{}%
+}
+
+\defbeamertemplate*{block alerted end}{ercis}
+{\end{beamercolorbox}\vskip\smallskipamount}
+
+
+\defbeamertemplate*{block example begin}{ercis}
+{
+  \par\vskip\medskipamount%
+  \begin{beamercolorbox}[colsep*=.75ex]{block title example}
+    \usebeamerfont*{block title example}\insertblocktitle%
+  \end{beamercolorbox}%
+  {\parskip0pt\par}%
+  \ifbeamercolorempty[bg]{block title example}
+  {}
+  {\ifbeamercolorempty[bg]{block body example}{}{\nointerlineskip\vskip-0.5pt}}%
+  \usebeamerfont{block body example}%
+  \begin{beamercolorbox}[colsep*=.75ex,vmode]{block body example}%
+    \ifbeamercolorempty[bg]{block body example}{\vskip-.25ex}{\vskip-.75ex}\vbox{}%
+}
+\defbeamertemplate*{block example end}{ercis}
+{\end{beamercolorbox}\vskip\smallskipamount}
+
+
+
+
+% Theorems
+
+%\defbeamertemplateparent{theorems}{theorem begin,theorem end}
+%{}
+
+\defbeamertemplate*{theorem begin}{ercis}
+{%
+  \begin{\inserttheoremblockenv}
+  {%
+    \inserttheoremname
+    \ifx\inserttheoremaddition\@empty\else\ (\inserttheoremaddition)\fi%
+  }%
+}
+
+\defbeamertemplate*{theorem end}{ercis}
+{\end{\inserttheoremblockenv}}
+
+
+% Proofs
+\defbeamertemplate*{proof begin}{ercis}
+{\begin{block}{\insertproofname}}
+
+\defbeamertemplate*{proof end}{ercis}
+{\end{block}}
+
+\defbeamertemplate*{qed symbol}{ercis}
+{\openbox}
+
+
+
+
+\mode
+<all>

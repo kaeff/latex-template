@@ -1,0 +1,86 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{wiwwulatex_qm}[2008/04/04 Basis-Befehle fuer LaTeX Stil QM (von Stephan Dlugosz) Vers. 0.5.5]
+
+\RequirePackage{lmodern} % Fuer umlautcodierung im pdf (zum rauskopieren) (Achtung, etwas andere Schrift)
+
+\topmargin-1cm
+\textheight23.5cm
+
+
+\defpagestyle{Titel}{%
+ {}
+ {}
+ {\hfill Westf\"{a}lische Wilhelms-Universit\"{a}t M\"{u}nster\hfill}
+ (\textwidth, 1pt)%
+}{%
+ {}
+ {}
+ {}%
+}
+\setheadsepline{0pt}
+
+\renewcommand{\gEinfTitelseite}{%
+\begin{titlepage}
+\thispagestyle{Titel}
+\vspace*{1cm}
+\begin{center}
+ Thema:
+ 
+ \begin{minipage}[t][0pt][t]{\textwidth}\center\Large\textbf{\Thema}\end{minipage}
+ 
+ \vspace*{5cm}
+ \textbf{\Typ}\\
+ \Zusatz
+ 
+ im Fachgebiet \Fachgebiet\\
+ am \Lehrstuhl
+\end{center}
+\vspace*{1.5cm}
+\begin{tabbing}
+\hspace*{3cm}\= \kill 
+Themensteller:	\> \Themensteller\\
+Betreuer:		\> \Betreuer\\
+\\
+vorgelegt von:	\> \Autor\\
+				\> \Strasse\\
+				\> \Ort\\
+				\> \Telefonnummer\\
+				\> \EMail\\
+\\
+Abgabetermin: 	\> \Abgabetermin\\
+\end{tabbing}
+\end{titlepage}
+}%
+\renewcommand{\eEinfTitelseite}{%
+\begin{titlepage}
+\thispagestyle{Titel}
+\vspace*{1cm}
+\begin{center}
+ Topic:
+ 
+ \begin{minipage}[t][0pt][t]{\textwidth}\center\Large\textbf{\Thema}\end{minipage}
+ 
+ \vspace*{5cm}
+ \textbf{\Typ}\\
+ \Zusatz
+ 
+ in the subject \Fachgebiet\\
+ at the \Lehrstuhl
+\end{center}
+\vspace*{1.5cm}
+\begin{tabbing}
+\hspace*{3cm}\= \kill 
+Supervisor:	\> \Themensteller\\
+Tutors:		\> \Betreuer\\
+\\
+Submitted By:	\> \Autor\\
+				\> \Strasse\\
+				\> \Ort\\
+				\> \Land\\
+				\> \Telefonnummer\\
+				\> \EMail\\
+\\
+Deadline: 	\> \Abgabetermin\\
+\end{tabbing}
+\end{titlepage}
+}

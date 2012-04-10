@@ -1,0 +1,176 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{wiwwuword_pi}[2008/04/15 Basis-Befehle fuer Kuchen-Stil (von Stephan Dlugosz) Vers. 0.5.5]
+
+\renewcommand{\addBetreuer}[1]{\concat{\Betreuer}{, #1}}
+\geometry{left=3.5cm, textwidth=15cm, top=2cm, textheight=25cm}
+\setbibstyle{alphadin}
+
+\defpagestyle{Titel}{
+ {}
+ {}
+ {\hfill Westf\"{a}lische Wilhelms-Universit\"{a}t M\"{u}nster\hfill}
+ (\textwidth, 0.5pt)
+}{
+ {}
+ {}
+ {}
+}
+
+\renewcommand{\headfont}{\normalfont}
+\ifthenelse{\boolean{istartcl}}{%
+	\renewcommand{\sectionmark}[1]{\markboth{\sectionname\ \thesection : #1}{\sectionname\ \thesection : #1}}
+}{%
+	\renewcommand{\chaptermark}[1]{\markboth{\chaptername\ \thechapter : #1}{\chaptername\ \thechapter : #1}}
+}
+\ihead[\headmark]{\headmark}
+\ofoot[{\makebox[0mm][l]{\makebox[1cm][r]{\pagemark}}}]{\makebox[0mm][l]{\makebox[1cm][r]{\pagemark}}}
+\setheadsepline{0.5pt}
+\ifthenelse{\boolean{istartcl}}{}{%
+	\renewcommand*{\chapterpagestyle}{scrheadings}
+}
+
+\AfterPackage{wiwwubildertabellen}{
+	\deffootnote{0.75cm}{0.75cm}{\textsuperscript{\normalfont\makebox[0.75cm][l]{\thefootnotemark}}} % Fussnotenstil
+}
+\renewcommand{\footnoterule}{\hrule width 5cm height 1pt \vspace{1ex}}
+
+% Kapitel-Ueberschriften
+\ifthenelse{\boolean{istartcl}}{%
+	\titleformat{\section}%
+	  {\normalfont\Large\bfseries}%
+	  {\makebox[0pt][l]{\thesection}}%
+	  {0.75cm}%
+	  {}%
+	\titlespacing{\section}{0pt}{16pt}{6pt}
+	\titleformat{\subsection}%
+	  {\normalfont\large\bfseries}%
+	  {\makebox[0pt][l]{\thesubsection}}%
+	  {1cm}%
+	  {}%
+	\titlespacing{\subsection}{0pt}{16pt}{0pt}
+	\titleformat{\subsubsection}%
+	  {\normalfont\normalsize\bfseries}%
+	  {\makebox[0pt][l]{\thesubsubsection}}%
+	  {1.25cm}%
+	  {}%
+	\titlespacing{\subsubsection}{0pt}{16pt}{0pt}
+	\let\minisec=\paragraph
+}{%
+	\titleformat{\chapter}%
+	  {\normalfont\Large\bfseries}%
+	  {\makebox[0pt][l]{\thechapter}}%
+	  {0.75cm}%
+	  {}%
+	\titlespacing{\chapter}{0pt}{0ex}{6pt}
+	\titleformat{\section}%
+	  {\normalfont\large\bfseries}%
+	  {\makebox[0pt][l]{\thesection}}%
+	  {1cm}%
+	  {}%
+	\titlespacing{\section}{0pt}{16pt}{0pt}
+	\titleformat{\subsection}%
+	  {\normalfont\normalsize\bfseries}%
+	  {\makebox[0pt][l]{\thesubsection}}%
+	  {1.25cm}%
+	  {}%
+	\titlespacing{\subsection}{0pt}{16pt}{0pt}
+	\let\paragraph=\subsubsection
+	
+	%% Abgeaendert aus der KOMA-Script Klasse scrbook
+	\renewcommand\minisec[1]{\@afterindentfalse \vskip 1.5ex
+      {\parindent \z@
+      \raggedsection\normalfont\itshape\nobreak#1\par\nobreak}\nobreak
+      \@afterheading}
+}
+
+\DeclareCaptionLabelSeparator{mylabelsep}{\hspace*{2.5cm}}
+\DeclareCaptionLabelFormat{mylabelformat}{\makebox[0pt][l]{#1~#2:}~}
+\captionsetup{labelformat={mylabelformat},labelfont={bf},labelsep=mylabelsep,format=hang,singlelinecheck=false}
+
+\setlength{\cfttabindent}{0pt}
+\setlength{\cftfigindent}{0pt}
+\renewcommand{\cftdotsep}{0}
+\renewcommand{\cftfigdotsep}{\cftdotsep}
+\renewcommand{\cfttabdotsep}{\cftdotsep}
+\renewcommand{\cftsecdotsep}{\cftdotsep}
+\renewcommand{\cftsubsecdotsep}{\cftdotsep}
+\renewcommand{\cfttabpresnum}{\tablename\ }
+\renewcommand{\cftfigpresnum}{\figurename\ }
+\setlength{\cfttabnumwidth}{2cm}
+\setlength{\cftfignumwidth}{2cm}
+\ifthenelse{\boolean{istartcl}}{%
+	\renewcommand{\cftsecleader}{\cftsubsecleader}
+	\setlength{\cftsubsecindent}{0.5cm}
+	\setlength{\cftsubsubsecindent}{0.75cm}
+	\setlength{\cftsecnumwidth}{0.75cm}
+	\setlength{\cftsubsecnumwidth}{1.25cm}
+	\setlength{\cftsubsubsecnumwidth}{1.5cm}
+	\renewcommand{\cftsecfont}{\mdseries}
+	\renewcommand{\cftsecpagefont}{\mdseries}
+	\setlength{\cftbeforesecskip}{2pt}
+}{%
+	\renewcommand{\cftchapdotsep}{\cftdotsep}
+	\renewcommand{\cftchapleader}{\cftsecleader}
+	\setlength{\cftsecindent}{0.5cm}
+	\setlength{\cftsubsecindent}{0.75cm}
+	\setlength{\cftchapnumwidth}{0.75cm}
+	\setlength{\cftsecnumwidth}{1.25cm}
+	\setlength{\cftsubsecnumwidth}{1.5cm}
+	\renewcommand{\cftchapfont}{\mdseries}
+	\renewcommand{\cftchappagefont}{\mdseries}
+	\setlength{\cftbeforechapskip}{2pt}
+}
+\setlength{\cftbeforetabskip}{2pt}
+\setlength{\cftbeforefigskip}{2pt}
+\cftsetrmarg{2.25ex}
+
+\renewcommand{\gEinfTitelseite}{
+\begin{titlepage}
+\thispagestyle{Titel}
+\vspace*{5.6cm}
+\begin{center}
+
+ \textbf{\Typ}\\[0.7cm]
+
+ \begin{minipage}[t][0pt][t]{\textwidth}
+  \center
+  \Large\textbf{\Thema}\\
+  \vspace{1cm}
+  \normalsize\Zusatz
+
+  \vspace{1.3cm}\large \Autor
+ \end{minipage}
+\end{center}
+\vspace*{12.5cm}
+
+Themensteller: \Themensteller\\[-0.5ex]
+Betreuer: \Betreuer\\[-0.5ex]
+Institut f\"{u}r Wirtschaftsinformatik\\[-0.5ex]
+\Lehrstuhl
+\end{titlepage}
+}
+\renewcommand{\eEinfTitelseite}{
+\begin{titlepage}
+\thispagestyle{Titel}
+\vspace*{5.6cm}
+\begin{center}
+
+ \textbf{\Typ}\\[0.7cm]
+
+ \begin{minipage}[t][0pt][t]{\textwidth}
+  \center
+  \Large\textbf{\Thema}\\
+  \vspace{1cm}
+  \normalsize\Zusatz
+
+  \vspace{1.3cm}\large \Autor
+ \end{minipage}
+\end{center}
+\vspace*{12.5cm}
+
+Supervisor: \Themensteller\\[-0.5ex]
+Tutors: \Betreuer\\[-0.5ex]
+Institut f\"{u}r Wirtschaftsinformatik\\[-0.5ex]
+\Lehrstuhl
+\end{titlepage}
+}

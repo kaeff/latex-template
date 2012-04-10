@@ -1,0 +1,72 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{iswiwwu}[2008/04/14 Basis-Befehle fuer Becker-Literaturverzeichnis (von Stephan Dlugosz) Vers. 0.5.5]
+
+\RequirePackage{kvoptions}
+\RequirePackage{ifthen} % fuer die Fallunterscheidungen
+\RequirePackage{xspace}
+
+\SetupKeyvalOptions{
+	family=iswiwwu,
+	prefix=iswiwwu@
+}
+
+\DeclareStringOption[german]{language}[german]
+\DeclareDefaultOption{
+    \PackageWarning{iswiwwu}{Unknown Option: \CurrentOption}
+}
+\ProcessKeyvalOptions{iswiwwu}
+
+%% Fuer die moegliche Uebersetzung %%
+\newcommand{\bibBD}{Band}
+\newcommand{\bibDIPLOM}{Diplomarbeit}
+\newcommand{\bibDISSER}{Dissertation}
+\newcommand{\bibFORSCHUNG}{Forschungsbericht}
+\newcommand{\bibHRSG}{Hrsg\xdot}
+\newcommand{\bibHRSGs}{Hrsg\xdot}
+\newcommand{\bibIN}{In:}
+\newcommand{\bibKAP}{Kap\xdot}
+\newcommand{\bibSN}{S}
+\newcommand{\bibSNs}{S}
+\newcommand{\bibS}{S\xdot}
+\newcommand{\bibSs}{S\xdot}
+\newcommand{\bibSIEHE}{Siehe}
+\newcommand{\bibUA}{\ua}
+\newcommand{\bibVERANST}{Veranst\xdot}
+\newcommand{\bibVON}{von}
+\newcommand{\bibZUGRIFF}{Abrufdatum}
+\newcommand{\bibAUFLeins}{.~Aufl\xdot}
+\newcommand{\bibAUFLzwei}{.~Aufl\xdot}
+\newcommand{\bibAUFLdrei}{.~Aufl\xdot}
+\newcommand{\bibAUFLn}{.~Aufl\xdot}
+
+% echtes Ausfuehren der Optionen %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifthenelse{\equal{\iswiwwu@language}{german}}{}{%
+	\ifthenelse{\equal{\iswiwwu@language}{english}}{%
+		\renewcommand{\bibBD}{Vol\xdot}
+		\renewcommand{\bibDIPLOM}{Mastersthesis}
+		\renewcommand{\bibDISSER}{PhD.~thesis}
+		\renewcommand{\bibFORSCHUNG}{Technical report}
+		\renewcommand{\bibHRSGs}{Eds}
+		\renewcommand{\bibHRSG}{Ed\xdot}
+		\renewcommand{\bibIN}{In:}
+		\renewcommand{\bibKAP}{Chap\xdot}
+		\renewcommand{\bibSN}{p}
+		\renewcommand{\bibSNs}{pp}
+		\renewcommand{\bibS}{p\xdot}
+		\renewcommand{\bibSs}{pp\xdot}
+		\renewcommand{\bibSIEHE}{Compare}
+		\renewcommand{\bibUA}{et al\xdot}
+		\renewcommand{\bibVERANST}{Veranst\xdot}
+		\renewcommand{\bibVON}{von}
+		\renewcommand{\bibZUGRIFF}{Date of access}
+		\renewcommand{\bibAUFLeins}{st~edition}
+		\renewcommand{\bibAUFLzwei}{nd~edition}
+		\renewcommand{\bibAUFLdrei}{rd~edition}
+		\renewcommand{\bibAUFLn}{th~edition}
+	}{%
+		\PackageWarning{iswiwwu}{Unknown language: \iswiwwu@language}
+		\PackageInfo{iswiwwu}{Using: german}
+	}
+}
+\DisableKeyvalOption{iswiwwu}{language}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
