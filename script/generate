@@ -1,7 +1,6 @@
 #! /bin/sh
 
-pandoc Inhalt.md.txt -o Inhalt.tex
-ruby script/replace.rb
+pandoc Inhalt.md.txt -t latex | ruby script/replace.rb | iconv -t ISO-8859-1 -o Inhalt.tex
 cd template/
 pdflatex Arbeit.tex
 pdflatex Arbeit.tex
