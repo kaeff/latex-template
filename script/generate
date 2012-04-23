@@ -2,6 +2,9 @@
 
 pandoc Inhalt.md.txt -t latex | ruby script/replace.rb | iconv -t ISO-8859-1 -o Inhalt.tex
 cd template/
+#latexmk -silent Arbeit
+pdflatex Arbeit.tex
+bibtex Arbeit -terse
 pdflatex Arbeit.tex
 pdflatex Arbeit.tex
 mv Arbeit.pdf ../
