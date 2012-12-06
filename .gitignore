@@ -4,3 +4,5 @@ Arbeit.toc
 *.log
 *.out
 Inhalt.tex
+template/Arbeit.bbl
+template/Arbeit.blg
